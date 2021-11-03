@@ -1,0 +1,127 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "97cb6ff0da03a41abe637ceaba0558ed",
+    "entities": [
+      {
+        "tableName": "PLANTE",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nomverna` TEXT NOT NULL DEFAULT '', `nomscient` TEXT NOT NULL DEFAULT '', `uri` TEXT NOT NULL DEFAULT '@drawable/tokenplant.jpg')",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nomverna",
+            "columnName": "nomverna",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "nomscient",
+            "columnName": "nomscient",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "uri",
+            "columnName": "uri",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'@drawable/tokenplant.jpg'"
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ARROSAGE",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `idp` INTEGER NOT NULL, `type` TEXT NOT NULL, `interval` INTEGER NOT NULL, `deb` INTEGER NOT NULL, `fin` INTEGER NOT NULL, PRIMARY KEY(`id`, `idp`), FOREIGN KEY(`idp`) REFERENCES `PLANTE`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idp",
+            "columnName": "idp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interval",
+            "columnName": "interval",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deb",
+            "columnName": "deb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fin",
+            "columnName": "fin",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id",
+            "idp"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_ARROSAGE_idp",
+            "unique": false,
+            "columnNames": [
+              "idp"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ARROSAGE_idp` ON `${TABLE_NAME}` (`idp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "PLANTE",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "idp"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97cb6ff0da03a41abe637ceaba0558ed')"
+    ]
+  }
+}
