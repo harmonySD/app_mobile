@@ -1,6 +1,8 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
+import android.content.Context
+import android.os.Vibrator
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -13,14 +15,19 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     //pour recherche plabtes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
 
+    private val context = getApplication<Application>().applicationContext
+
+
     fun addPlantes(n: String?, ns: String?, uri: String?){
         Thread{
             if(n!="" || ns!=""){
-                Log.d("getPlante", "ici")
+                Log.d("getPlante", "enregistrer")
                 dao.ajoutPlante(Eplante(nomverna = n?.trim(),nomscient = ns?.trim(), uri = uri?.trim()))
             }else{
-                Log.d("getPlante", "la")
-                //Toast.makeText(getApplication(),"Mettre au moins un nom!",Toast.LENGTH_SHORT).show()
+                Log.d("getPlante", "non enregistrer")
+                val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(50)
+
             }
         }.start()
     }
