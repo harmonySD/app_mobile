@@ -1,11 +1,9 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
-import android.content.Context
-import android.os.Vibrator
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
@@ -15,25 +13,35 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     //pour recherche plabtes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
 
-    private val context = getApplication<Application>().applicationContext
 
+    //TODO il faudra sûrement avoir à changer le type de AjouterFragment vers une interface ou quoi ?
+    var fragment: AjouterFragment? = null // le fragment doit s'auto enregistrer pour qu'on puisse accéder à son contexte
 
+    fun setfragment(frag:AjouterFragment){this.fragment = frag
+    }
+
+    fun callvibrate(){
+
+        if((this.fragment?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.DESTROYED))== false  ){
+            this.fragment?.vibrate()
+        }
+    }
     fun addPlantes(n: String?, ns: String?, uri: String?){
         Thread{
             if(n!="" || ns!=""){
-                Log.d("getPlante", "enregistrer")
+                //Log.d("getPlante", "enregistré)
                 dao.ajoutPlante(Eplante(nomverna = n?.trim(),nomscient = ns?.trim(), uri = uri?.trim()))
             }else{
-                Log.d("getPlante", "non enregistrer")
-                val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(50)
-
+                //Log.d("getPlante", "non enregistré")
+                //val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                //vibrator.vibrate(VibrationEffect.createOneShot(50,DEFAULT_AMPLITUDE))
+            callvibrate()
             }
         }.start()
     }
 
     fun getPaysPrefix(p:String){
-        Log.d("getPlante", "p=$p")
+        //Log.d("getPlante", "p=$p")
         Thread {
             Log.d("getPlante", "${dao.loadPartialName(p)}")
             certainesPlantes.postValue(dao.loadPartialName(p))

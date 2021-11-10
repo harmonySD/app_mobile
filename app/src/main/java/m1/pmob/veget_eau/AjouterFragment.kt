@@ -1,6 +1,9 @@
 package m1.pmob.veget_eau
 
+import android.content.Context
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,12 +22,13 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     }
 
     private lateinit var binding : FragmentAjouterBinding
-    val model by lazy{ ViewModelProvider(this).get(MyViewModel::class.java)}
+    val model by lazy{
+        ViewModelProvider(this).get(MyViewModel::class.java)}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
-
+        model.setfragment(this)
         binding.bAjouter.setOnClickListener{
             val nc = binding.edNomverna.text.toString().trim()
             val ns = binding.edNomscient.text.toString().trim()
@@ -36,6 +40,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             Log.d("kk","enregister")
 
         }
+    }
+    fun vibrate(){val vibrator =context?.applicationContext?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
     }
 
 }
