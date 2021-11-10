@@ -1,5 +1,6 @@
 package m1.pmob.veget_eau
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -22,9 +23,12 @@ interface DaoBdPlante {
     fun modifArros(vararg p :Earrosage):Int
 
     @Query("SELECT * FROM PLANTE")
-    fun getAllPlants():Array<Eplante>
+    fun getAllPlants():LiveData<Eplante>
 
     @Query("SELECT * FROM ARROSAGE WHERE idp = :idrch ")
-    fun getPlantArros(idrch :Int):Array<Earrosage>
+    fun getPlantArros(idrch :Int):LiveData<Earrosage>
+
+    @Query("SELECT * FROM PLANTE WHERE (nomscient like :nom || '%') OR (nomverna like :nom || '%')")
+    fun loadPartialName(nom: String): List<Eplante>
 
 }
