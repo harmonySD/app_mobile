@@ -7,7 +7,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import m1.pmob.veget_eau.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    val binding : ActivityMainBinding by lazy{ ActivityMainBinding.inflate(layoutInflater) }
+    val binding : ActivityMainBinding by lazy{ ActivityMainBinding.inflate(this.layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,3 +29,5 @@ class MainActivity : AppCompatActivity() {
             .attach()
     }
 }
+
+

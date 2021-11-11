@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/textdebut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:text="Début de la période " />
+
+        <EditText
+            android:id="@+id/jourdeb"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            />
+
+        <Spinner
+            android:id="@+id/moisdeb"
+            android:entries="@array/Months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+ />
+
+
+        <TextView
+            android:id="@+id/textfin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:text="fin de la période " />
+
+        <EditText
+            android:id="@+id/jourfin"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+        />
+
+        <Spinner
+            android:id="@+id/moisfin"
+            android:entries="@array/Months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+        <EditText
+            android:id="@+id/freqjour"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:inputType="number"
+            android:imeOptions="actionDone" />
+
+
+        <Spinner
+            android:id="@+id/typearros"
+            android:entries="@array/WateringTypes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
 
 
@@ -29,20 +31,22 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
         model.setfragment(this)
-        binding.bAjouter.setOnClickListener{
-            val nc = binding.edNomverna.text.toString().trim()
-            val ns = binding.edNomscient.text.toString().trim()
-            val uri = binding.edUri.text.toString().trim()
-            model.addPlantes(n=nc,ns=ns,uri=uri)
-            binding.edNomscient.text.clear()
-            binding.edNomverna.text.clear()
-            binding.edUri.text.clear()
-            Log.d("kk","enregister")
+        binding.recyVplante.adapter=FreqRCVA()
 
-        }
     }
+
     fun vibrate(){val vibrator =context?.applicationContext?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        Toast.makeText(context,"Entrée incorrecte",Toast.LENGTH_SHORT).show()
     }
 
+    fun ajouterfreq(v:View){}
+    fun ajouterplante(v:View){val nc = binding.edNomverna.text.toString().trim()
+        val ns = binding.edNomscient.text.toString().trim()
+        val uri = binding.edUri.text.toString().trim()
+        model.addPlantes(n=nc,ns=ns,uri=uri)
+        binding.edNomscient.text.clear()
+        binding.edNomverna.text.clear()
+        binding.edUri.text.clear()
+        Log.d("kk","enregister")}
 }

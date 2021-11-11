@@ -2,4 +2,17 @@
     <string name="app_name">veget-eau</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="Months">
+        <item>Janvier</item><item>Février</item>
+        <item>Mars</item><item>Avril</item>
+        <item>Mai</item><item>Juin</item>
+        <item>Juillet</item><item>Août</item>
+        <item>Septembre</item><item>Octobre</item>
+        <item>Novembre</item><item>Décembre</item>
+    </string-array>
+    <string-array name="WateringTypes">
+        <item>Eau</item>
+        <item>Nutritif</item>
+    </string-array>
+
 </resources>
