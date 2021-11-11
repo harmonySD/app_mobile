@@ -13,13 +13,13 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     //pour recherche plabtes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
 
-    fun addPlantes(n: String?, ns: String?, uri: String?){
+    fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
-            dao.ajoutPlante(Eplante(nomverna = n?.trim(),nomscient = ns?.trim(), uri = uri?.trim()))
+            dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
 
-    fun getPaysPrefix(p:String){
+    fun getPlantesPrefix(p:String){
         //Log.d("getPlante", "p=$p")
         Thread {
             Log.d("getPlante", "${dao.loadPartialName(p)}")

@@ -30,12 +30,11 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
-       // model.setfragment(this)
         binding.bAjouter.setOnClickListener{
             val nc = binding.edNomverna.text.toString().trim()
             val ns = binding.edNomscient.text.toString().trim()
             val uri = binding.edUri.text.toString().trim()
-            if(nc=="" || ns==""){
+            if(nc=="" && ns==""){
                 val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                 vibrator.vibrate(VibrationEffect.createOneShot(50,DEFAULT_AMPLITUDE))
                 afficherDialog("mettre au moins un nom :(")

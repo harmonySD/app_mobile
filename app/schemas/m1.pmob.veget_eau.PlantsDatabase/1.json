@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2b3618d034b6743affddecb32de04727",
+    "identityHash": "1872ce25d8072a68d1a3039e29436222",
     "entities": [
       {
         "tableName": "PLANTE",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nomverna` TEXT DEFAULT '', `nomscient` TEXT DEFAULT '', `uri` TEXT DEFAULT '@drawable/tokenplant.jpg')",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nomverna` TEXT NOT NULL DEFAULT '', `nomscient` TEXT NOT NULL DEFAULT '', `uri` TEXT DEFAULT '@drawable/tokenplant.jpg')",
         "fields": [
           {
             "fieldPath": "id",
@@ -18,14 +18,14 @@
             "fieldPath": "nomverna",
             "columnName": "nomverna",
             "affinity": "TEXT",
-            "notNull": false,
+            "notNull": true,
             "defaultValue": "''"
           },
           {
             "fieldPath": "nomscient",
             "columnName": "nomscient",
             "affinity": "TEXT",
-            "notNull": false,
+            "notNull": true,
             "defaultValue": "''"
           },
           {
@@ -121,7 +121,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b3618d034b6743affddecb32de04727')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1872ce25d8072a68d1a3039e29436222')"
     ]
   }
 }
