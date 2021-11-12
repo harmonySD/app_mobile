@@ -17,7 +17,7 @@ import java.util.Date
 data class Earrosage(val id:Int
                      , @ColumnInfo(index = true)val idp:Int,
                      @NonNull val type:Typearros,
-                     @NonNull val interval : DateInterval,
+                     @NonNull val interval : Int,
                      @NonNull val deb : Date,
                      @NonNull  val fin : Date
 )
