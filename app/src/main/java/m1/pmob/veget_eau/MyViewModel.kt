@@ -15,12 +15,11 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
-            dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
+           dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
 
     fun getPlantesPrefix(p:String){
-        //Log.d("getPlante", "p=$p")
         Thread {
             Log.d("getPlante", "${dao.loadPartialName(p)}")
             certainesPlantes.postValue(dao.loadPartialName(p))

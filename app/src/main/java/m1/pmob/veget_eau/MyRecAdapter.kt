@@ -22,9 +22,9 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        //Log.d(TAG,"$position")
-        var p : TextView = holder.itemView.findViewById(R.id.ed_nomscient)
-        var c : TextView = holder.itemView.findViewById(R.id.ed_nomverna)
+        Log.d("ici","$position")
+        var p : TextView = holder.itemView.findViewById(R.id.nomscient)
+        var c : TextView = holder.itemView.findViewById(R.id.nomverna)
         //var sup: TextView=holder.itemView.findViewById(R.id.superficie)
         p.text=allPlantes[position].nomscient
         //Log.d(TAG,"${p.text}")

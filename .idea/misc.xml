@@ -4,9 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/fragment_ajouter.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_consulter.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/item_layout.xml" value="0.1" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.10520833333333333" />
       </map>
     </option>
   </component>
