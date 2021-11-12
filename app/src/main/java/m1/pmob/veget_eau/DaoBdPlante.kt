@@ -23,7 +23,7 @@ interface DaoBdPlante {
     fun modifArros(vararg p :Earrosage):Int
 
     @Query("SELECT * FROM PLANTE")
-    fun getAllPlants():LiveData<Eplante>
+    fun getAllPlants():LiveData<List<Eplante>>
 
     @Query("SELECT * FROM ARROSAGE WHERE idp = :idrch ")
     fun getPlantArros(idrch :Int):LiveData<Earrosage>
