@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -54,12 +55,34 @@
             android:id="@+id/ed_uri"/>
     </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="350dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+        <include layout="@layout/choix_freq"
+            android:id="@+id/choix_freq"
+
+            />
+        <include layout="@layout/choix_freq"
+            android:id="@+id/arros2"
+            />
+        <include layout="@layout/choix_freq"
+            android:id="@+id/arros3"
+            />
+    </LinearLayout>
+    </ScrollView>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ajouter"
         android:id="@+id/b_ajouter"
-        android:onClick="ajouter"
+
 
         />
 
