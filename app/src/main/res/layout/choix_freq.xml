@@ -81,10 +81,19 @@
                 android:layout_height="25dp" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Fréquence d'arrosage en jours"/>
+
         <EditText
-            android:layout_width="100dp"
+            android:id="@+id/edtextfreqj"
+            android:layout_width="50dp"
             android:layout_height="25dp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:layout_gravity="center_horizontal"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -122,6 +131,7 @@
 
     </LinearLayout>
     <CheckBox
+        android:id="@+id/chckactiv"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical"/>

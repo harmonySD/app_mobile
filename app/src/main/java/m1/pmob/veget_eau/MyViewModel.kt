@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import java.util.*
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
     val dao = PlantsDatabase.getDatabase(application).myDao()
@@ -18,6 +19,12 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
            dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
+    fun addPlanteArros(idp:Int, type:Typearros,interval:Int, deb: Date, fin:Date){
+        Thread{
+            dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
+        }.start()
+    }
+
 
     fun getPlantesPrefix(p:String){
         Thread {

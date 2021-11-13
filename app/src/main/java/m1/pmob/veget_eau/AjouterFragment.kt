@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import m1.pmob.veget_eau.databinding.ChoixFreqBinding
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
 
 
@@ -33,27 +34,43 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
-        binding.bAjouter.setOnClickListener{
+        binding.bAjouter.setOnClickListener {
             val nc = binding.edNomverna.text.toString().trim()
             val ns = binding.edNomscient.text.toString().trim()
             val uri = binding.edUri.text.toString().trim()
-            if(nc=="" && ns==""){
+            if (nc == "" && ns == "") {
                 afficherDialog("mettre au moins un nom :(")
                 return@setOnClickListener
-            }else if(nc==""){
-                model.addPlantes(n="non communiqué",ns=ns,uri=uri)
-            }else if(ns==""){
-                model.addPlantes(n=nc,ns="non communiqué",uri=uri)
-            }else{
-                model.addPlantes(n=nc,ns=ns,uri=uri)
+            } else if (nc == "") {
+                model.addPlantes(n = "non communiqué", ns = ns, uri = uri)
+            } else if (ns == "") {
+                model.addPlantes(n = nc, ns = "non communiqué", uri = uri)
+            } else {
+                model.addPlantes(n = nc, ns = ns, uri = uri)
             }
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
-            Log.d("kk","enregister")
+            Log.d("kk", "enregister")
 
         }
+        //==================== PARTIE POUR LA FREQUENCE==================
+        binding.arros1.chckactiv.setOnClickListener {
+            alterArros(binding.arros1,binding.arros1.chckactiv.isChecked)
+        }
+
+        binding.arros2.chckactiv.setOnClickListener {
+                alterArros(binding.arros2,binding.arros2.chckactiv.isChecked)
+            }
+
+        binding.arros3.chckactiv.setOnClickListener {
+            alterArros(binding.arros3,binding.arros3.chckactiv.isChecked)
+        }
+        alterArros(binding.arros1,false)
+        alterArros(binding.arros2,false)
+        alterArros(binding.arros3,false)
     }
+
     fun afficherDialog( s: String ){
         context?.let {
             AlertDialog.Builder(it)
@@ -64,4 +81,16 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         return
     }
 
+    fun alterArros(target:ChoixFreqBinding,newStatus:Boolean):Unit{
+        target.jourdeb.isEnabled = newStatus
+        target.moisdeb.isEnabled = newStatus
+        target.jourfin.isEnabled = newStatus
+        target.moisfin.isEnabled = newStatus
+        target.radbnormal.isEnabled = newStatus
+        target.radbnutri.isEnabled = newStatus
+        target.edtextfreqj.isEnabled = newStatus
+    }
+    fun getArros(target: ChoixFreqBinding){
+        model.add
+    }
 }
