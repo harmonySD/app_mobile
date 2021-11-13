@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import m1.pmob.veget_eau.databinding.ChoixFreqBinding
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
+import java.text.DateFormat
+import java.util.*
 
 
 class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
@@ -51,8 +53,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
-            Log.d("kk", "enregister")
 
+            addArros()
+            Log.d("kk", "enregister")
         }
         //==================== PARTIE POUR LA FREQUENCE==================
         binding.arros1.chckactiv.setOnClickListener {
@@ -90,7 +93,29 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         target.radbnutri.isEnabled = newStatus
         target.edtextfreqj.isEnabled = newStatus
     }
-    fun getArros(target: ChoixFreqBinding){
-        model.add
+
+    fun addArros(target: ChoixFreqBinding,idp:Int,deb :Date,fin:Date){ //TODO cette fonction sera très probablement réutilisable autre part!
+        if(!target.chckactiv.isChecked){return} // si la fréquence n'est pas cochée, on retourne !
+        val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
+
+        val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
+        val  deb:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
+        val fin:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
+        if(deb == null||fin==null){
+            Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
+            return
+        }
+        model.addPlanteArros(idp=idp,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
+    }
+    fun checkDates():Boolean{
+        val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
+        for(target in [binding.arros1,binding.arros2,binding.arros3]){
+        val  deb:Date? = DF.parse(binding.arros1.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
+        val fin:Date? = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
+        if(deb == null||fin==null){
+            return false
+        }
+    }
+        return true
     }
 }
