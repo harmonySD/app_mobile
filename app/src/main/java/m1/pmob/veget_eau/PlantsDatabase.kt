@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.room.*
 
 @Database(
-        entities=[Eplante::class,Earrosage::class],version = 6
+        entities=[Eplante::class,Earrosage::class],version = 7
 )
 @TypeConverters(DateConverter::class)
 abstract class PlantsDatabase:RoomDatabase() {

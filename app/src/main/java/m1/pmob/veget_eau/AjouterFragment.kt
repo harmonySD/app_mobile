@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import m1.pmob.veget_eau.databinding.ChoixFreqBinding
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Arrays.asList
 import kotlin.collections.ArrayList
@@ -107,12 +108,14 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         makeInexactArros(binding.arros2),
         makeInexactArros(binding.arros3))){
             if(e != null){
+                Log.i("ARROS",e.toString() )
                 tab.add(e)
             }
         }
-        @Suppress("UNCHECKED_CAST")
+
+
         model.addPlantesandArros(
-            n = nc, ns = ns, uri = uri, *(tab.toArray() as Array<Earrosage>)
+            n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
     }
 
@@ -120,17 +123,18 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         //TODO cette fonction sera très probablement réutilisable autre part!
         if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas cochée, on retourne !
         val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
-        val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
-        val  deb:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
-        val fin:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
+        val DF = SimpleDateFormat("dd.MM.yyyy")
+        val deb:Date = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")!!
+        val fin:Date = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")!!
+
         return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
 
     private fun checkDates():Boolean{
-        val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
+        val DF = SimpleDateFormat("dd.MM.yyyy")
         for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
-            val  deb:Date? = DF.parse(binding.arros1.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
-            val fin:Date? = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
+            val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
+            val fin:Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
         if(deb == null||fin==null){
             return false
         }

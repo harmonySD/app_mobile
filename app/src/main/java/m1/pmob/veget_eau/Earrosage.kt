@@ -14,8 +14,8 @@ import java.util.Date
     ],primaryKeys = ["id","idp"],
 )
 
-data class Earrosage(@PrimaryKey(autoGenerate = true)val id:Long =0 // id = 0 comme ça SQL lite fait le travail
-                     ,val idp:Long ,
+data class Earrosage(@ColumnInfo(index= true)val id:Long =0 // id = 0 comme ça SQL lite fait le travail
+                     ,@ColumnInfo(index= true)val idp:Long ,
                      @NonNull val type:Typearros,
                      @NonNull val interval : Int,
                      @NonNull val deb : Date,
