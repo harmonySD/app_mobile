@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
     val dao = PlantsDatabase.getDatabase(application).myDao()
@@ -16,10 +17,10 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
-           dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
+            dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
-    fun addPlanteArros(idp:Int, type:Typearros,interval:Int, deb: Date, fin:Date){
+    fun addArros(idp:Long, type:Typearros,interval:Int, deb: Date, fin:Date){
         Thread{
             dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
         }.start()
@@ -31,7 +32,16 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             Log.d("getPlante", "${dao.loadPartialName(p)}")
             certainesPlantes.postValue(dao.loadPartialName(p))
         }.start()
-
     }
 
+
+    fun addPlantesandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage){
+        Thread{
+            val ret : List<Long> = dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
+            for (fakearros in lstfakearros){
+                dao.ajoutArros(Earrosage(idp=ret[0],type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
+            }
+
+        }.start()
+    }
 }

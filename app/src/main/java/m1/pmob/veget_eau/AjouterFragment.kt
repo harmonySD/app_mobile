@@ -19,6 +19,8 @@ import m1.pmob.veget_eau.databinding.ChoixFreqBinding
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
 import java.text.DateFormat
 import java.util.*
+import java.util.Arrays.asList
+import kotlin.collections.ArrayList
 
 
 class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
@@ -33,45 +35,50 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         ViewModelProvider(this).get(MyViewModel::class.java)}
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
         binding.bAjouter.setOnClickListener {
-            val nc = binding.edNomverna.text.toString().trim()
-            val ns = binding.edNomscient.text.toString().trim()
+            var nc = binding.edNomverna.text.toString().trim()
+            var ns = binding.edNomscient.text.toString().trim()
             val uri = binding.edUri.text.toString().trim()
+
             if (nc == "" && ns == "") {
                 afficherDialog("mettre au moins un nom :(")
                 return@setOnClickListener
             } else if (nc == "") {
-                model.addPlantes(n = "non communiqué", ns = ns, uri = uri)
+                nc = "non communiqué"
             } else if (ns == "") {
-                model.addPlantes(n = nc, ns = "non communiqué", uri = uri)
-            } else {
-                model.addPlantes(n = nc, ns = ns, uri = uri)
+                ns = "non communiqué"
             }
+
+            if(!checkDates()){
+                Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show();return@setOnClickListener
+            }
+            addPlanteAndArros(nc,ns,uri)
+
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
-
-            addArros()
+            clearAllArros()
             Log.d("kk", "enregister")
         }
         //==================== PARTIE POUR LA FREQUENCE==================
         binding.arros1.chckactiv.setOnClickListener {
-            alterArros(binding.arros1,binding.arros1.chckactiv.isChecked)
+            activateArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
         }
 
         binding.arros2.chckactiv.setOnClickListener {
-                alterArros(binding.arros2,binding.arros2.chckactiv.isChecked)
+            activateArrosElem(binding.arros2,binding.arros2.chckactiv.isChecked)
             }
 
         binding.arros3.chckactiv.setOnClickListener {
-            alterArros(binding.arros3,binding.arros3.chckactiv.isChecked)
+            activateArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
         }
-        alterArros(binding.arros1,false)
-        alterArros(binding.arros2,false)
-        alterArros(binding.arros3,false)
+
+        activateArrosElem(binding.arros1,false)
+        activateArrosElem(binding.arros2,false)
+        activateArrosElem(binding.arros3,false)
     }
 
     fun afficherDialog( s: String ){
@@ -84,7 +91,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         return
     }
 
-    fun alterArros(target:ChoixFreqBinding,newStatus:Boolean):Unit{
+    fun activateArrosElem(target:ChoixFreqBinding,newStatus:Boolean):Unit{
         target.jourdeb.isEnabled = newStatus
         target.moisdeb.isEnabled = newStatus
         target.jourfin.isEnabled = newStatus
@@ -94,28 +101,46 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         target.edtextfreqj.isEnabled = newStatus
     }
 
-    fun addArros(target: ChoixFreqBinding,idp:Int,deb :Date,fin:Date){ //TODO cette fonction sera très probablement réutilisable autre part!
-        if(!target.chckactiv.isChecked){return} // si la fréquence n'est pas cochée, on retourne !
-        val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
+    private fun addPlanteAndArros( nc:String, ns:String, uri:String){//ajoute la plante et l'arrosage
+        val tab = ArrayList<Earrosage>(0)
+        for (e in arrayOf(  makeInexactArros(binding.arros1),
+        makeInexactArros(binding.arros2),
+        makeInexactArros(binding.arros3))){
+            if(e != null){
+                tab.add(e)
+            }
+        }
+        @Suppress("UNCHECKED_CAST")
+        model.addPlantesandArros(
+            n = nc, ns = ns, uri = uri, *(tab.toArray() as Array<Earrosage>)
+        )
+    }
 
+    private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu.
+        //TODO cette fonction sera très probablement réutilisable autre part!
+        if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas cochée, on retourne !
+        val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
         val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
         val  deb:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
         val fin:Date = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")!!
-        if(deb == null||fin==null){
-            Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
-            return
-        }
-        model.addPlanteArros(idp=idp,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
+        return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
-    fun checkDates():Boolean{
+
+    private fun checkDates():Boolean{
         val DF = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRANCE)
-        for(target in [binding.arros1,binding.arros2,binding.arros3]){
-        val  deb:Date? = DF.parse(binding.arros1.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
-        val fin:Date? = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
+        for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
+            val  deb:Date? = DF.parse(binding.arros1.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
+            val fin:Date? = DF.parse(target.jourdeb.selectedItem.toString()+"."+target.moisdeb.selectedItem.toString()+".2000")
         if(deb == null||fin==null){
             return false
         }
     }
         return true
+    }
+
+    private fun clearAllArros(){ // vide les champs d'arros
+        for (target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
+            target.edtextfreqj.text.clear()
+        }
     }
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "PLANTE",
 )
 data class Eplante(
-        @PrimaryKey(autoGenerate = true)val id:Int=0,
+        @PrimaryKey(autoGenerate = true)val id:Long=0,
         @NonNull @ColumnInfo(defaultValue = "") val nomverna:String,
         @NonNull @ColumnInfo(defaultValue = "") val nomscient:String,
         @NonNull @ColumnInfo(defaultValue = "'@drawable/tokenplant.jpg'") val uri: String?
