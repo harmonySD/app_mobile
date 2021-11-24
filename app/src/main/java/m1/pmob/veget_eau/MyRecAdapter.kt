@@ -24,7 +24,8 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
         val holder = VH(binding)
         holder.itemView.setOnClickListener {v->
             val iii = Intent(v.context, FicheActivity::class.java)
-            Log.d("TOUCHER OK","OK")
+            val position= holder.absoluteAdapterPosition
+            Log.d("TOUCHER OK",position.toString())
             v.context.startActivity(iii)
 
         }
