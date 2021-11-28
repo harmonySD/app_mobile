@@ -8,7 +8,8 @@ interface DaoBdPlante {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun ajoutPlante(vararg p :Eplante):List<Long>
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun ajoutArros(vararg arros :Earrosage):List<Long>
 
     @Delete
@@ -30,5 +31,8 @@ interface DaoBdPlante {
 
     @Query("SELECT * FROM PLANTE WHERE (nomscient like :nom || '%') OR (nomverna like :nom || '%')")
     fun loadPartialName(nom: String): List<Eplante>
+
+    @Query("SELECT * FROM PLANTE WHERE (nomscient like :nomscient ) AND (nomverna like :nomverna )")
+    fun loadExactName(nomverna:String,nomscient:String):Eplante
 
 }

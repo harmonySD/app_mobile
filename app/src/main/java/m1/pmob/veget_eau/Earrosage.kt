@@ -11,11 +11,11 @@ import java.util.Date
                 parentColumns = ["id"],
                 childColumns = ["idp"]
         )
-    ],primaryKeys = ["id","idp"],
+    ]
 )
 
-data class Earrosage(val id:Int
-                     , @ColumnInfo(index = true)val idp:Int,
+data class Earrosage(@PrimaryKey(autoGenerate = true)val id:Long =0 // id = 0 comme ça SQL lite fait le travail
+                     ,val idp:Long ,
                      @NonNull val type:Typearros,
                      @NonNull val interval : Int,
                      @NonNull val deb : Date,
