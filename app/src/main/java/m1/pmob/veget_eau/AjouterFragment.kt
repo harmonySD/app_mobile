@@ -144,6 +144,11 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     private fun clearAllArros(){ // vide les champs d'arros
         for (target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
             target.edtextfreqj.text.clear()
+            target.jourdeb.setSelection(0);
+            target.moisdeb.setSelection(0);
+            target.jourfin.setSelection(0);
+            target.moisfin.setSelection(0);
         }
+
     }
 }
