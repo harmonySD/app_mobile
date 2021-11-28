@@ -54,7 +54,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             }
 
             if(!checkDates()){
-                Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show();return@setOnClickListener
+                Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
             addPlanteAndArros(nc,ns,uri)
 
@@ -62,7 +63,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
             clearAllArros()
-            Log.d("kk", "enregister")
+
         }
         //==================== PARTIE POUR LA FREQUENCE==================
         binding.arros1.chckactiv.setOnClickListener {
@@ -76,7 +77,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         binding.arros3.chckactiv.setOnClickListener {
             activateArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
         }
-
+        // au début aucune fréquence n'est activée
         activateArrosElem(binding.arros1,false)
         activateArrosElem(binding.arros2,false)
         activateArrosElem(binding.arros3,false)
@@ -92,7 +93,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         return
     }
 
-    fun activateArrosElem(target:ChoixFreqBinding,newStatus:Boolean):Unit{
+    fun activateArrosElem(target:ChoixFreqBinding,newStatus:Boolean):Unit{ //permet d'activer ou de désactiver une fréquence d'arrosage
         target.jourdeb.isEnabled = newStatus
         target.moisdeb.isEnabled = newStatus
         target.jourfin.isEnabled = newStatus
@@ -102,26 +103,24 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         target.edtextfreqj.isEnabled = newStatus
     }
 
-    private fun addPlanteAndArros( nc:String, ns:String, uri:String){//ajoute la plante et l'arrosage
+    private fun addPlanteAndArros( nc:String, ns:String, uri:String){//ajoute la plante et les arrosages à la BD
         val tab = ArrayList<Earrosage>(0)
         for (e in arrayOf(  makeInexactArros(binding.arros1),
         makeInexactArros(binding.arros2),
         makeInexactArros(binding.arros3))){
             if(e != null){
-                Log.i("ARROS",e.toString() )
                 tab.add(e)
             }
         }
-
 
         model.addPlantesandArros(
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
     }
 
-    private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu.
-        //TODO cette fonction sera très probablement réutilisable autre part!
-        if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas cochée, on retourne !
+    private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu pour servir temporairement.
+        //TODO cette fonction sera très probablement réutilisable/déplaçable autre part!
+        if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas "activée", on retourne !
         val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
         val DF = SimpleDateFormat("dd.MM.yyyy")
         val deb:Date = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")!!
@@ -130,7 +129,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
 
-    private fun checkDates():Boolean{
+    private fun checkDates():Boolean{ // vérifie que les dates respectent bien un schéma correct avant ajout
         val DF = SimpleDateFormat("dd.MM.yyyy")
         for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
             val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")

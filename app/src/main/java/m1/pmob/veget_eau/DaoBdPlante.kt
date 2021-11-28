@@ -9,7 +9,7 @@ interface DaoBdPlante {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun ajoutPlante(vararg p :Eplante):List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun ajoutArros(vararg arros :Earrosage):List<Long>
 
     @Delete

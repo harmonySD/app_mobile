@@ -32,8 +32,10 @@
             <Spinner
                 android:id="@+id/jourdeb"
                 android:entries="@array/Daysinmonth"
-                android:layout_width="50dp"
-                android:layout_height="25dp" />
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,8 +45,10 @@
             <Spinner
                 android:id="@+id/moisdeb"
                 android:entries="@array/Months"
-                android:layout_width="50dp"
-                android:layout_height="25dp" />
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
         </LinearLayout>
 
         <TextView
@@ -61,13 +65,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jour:" />
+                android:text="Jour:"
+                android:background="#ffffff"
+                />
 
             <Spinner
                 android:id="@+id/jourfin"
                 android:entries="@array/Daysinmonth"
-                android:layout_width="50dp"
-                android:layout_height="25dp" />
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,8 +85,10 @@
             <Spinner
                 android:id="@+id/moisfin"
                 android:entries="@array/Months"
-                android:layout_width="50dp"
-                android:layout_height="25dp" />
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
         </LinearLayout>
 
         <TextView
@@ -89,8 +99,8 @@
 
         <EditText
             android:id="@+id/edtextfreqj"
-            android:layout_width="50dp"
-            android:layout_height="25dp"
+            android:layout_width="70dp"
+            android:layout_height="45dp"
             android:inputType="number"
             android:layout_gravity="center_horizontal"
             />
