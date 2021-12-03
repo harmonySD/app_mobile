@@ -46,6 +46,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
 
 
     lateinit var imageView: ImageView
+    var uri_path : Uri? = null
+    var b : Boolean =false
+    //ajouter ca dans bd
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
@@ -58,10 +61,12 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
 
 
         mChooseBtn.setOnClickListener{
+          b=true
            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             getResult.launch(gallery)
         }
         takeBn.setOnClickListener{
+           b=false
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }
@@ -69,8 +74,15 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         binding.bAjouter.setOnClickListener {
             var nc = binding.edNomverna.text.toString().trim()
             var ns = binding.edNomscient.text.toString().trim()
-            val uri = binding.edUri.text.toString().trim()
-
+            //val uri = binding.edUri.text.toString().trim()
+            lateinit var uri : String
+            if(uri_path.toString()==""){
+                uri=""
+                afficherDialog("photo non ok")
+            }else{
+                uri=uri_path.toString()
+                afficherDialog("photo ok")
+            }
             if (nc == "" && ns == "") {
                 afficherDialog("mettre au moins un nom :(")
                 return@setOnClickListener
@@ -179,24 +191,22 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         }
 
     }
- /*   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage) {
-            imageUri = data?.data
-            imageView.setImageURI(imageUri)
-        }
-        if (resultCode == RESULT_OK && requestCode == takeimage && data != null){
-            imageView.setImageBitmap(data.extras?.get("data") as Bitmap)
-        }
-    }
-    */
+
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                imageView.setImageURI(it.data?.data)
-                imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+                //uri_path = it.data?.data
+                    if(b==true){
+                        //marche pour prendre depuis gallery
+                        imageView.setImageURI(it.data?.data)
+                    }else if(b==false){
+                        //marche pour appareil photo
+                        imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+                    }
+
+
             }
         }
 }
