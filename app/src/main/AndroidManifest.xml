@@ -3,6 +3,7 @@
     package="m1.pmob.veget_eau">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/plante"

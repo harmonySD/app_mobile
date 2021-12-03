@@ -1,17 +1,26 @@
 package m1.pmob.veget_eau
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
@@ -35,10 +44,28 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     val model by lazy{
         ViewModelProvider(this).get(MyViewModel::class.java)}
 
+
+    lateinit var imageView: ImageView
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAjouterBinding.bind(view)
+
+        imageView = binding.imageView
+        var mChooseBtn= binding.chooseImageBtn
+        var takeBn= binding.takeImageBtn
+
+
+        mChooseBtn.setOnClickListener{
+           val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            getResult.launch(gallery)
+        }
+        takeBn.setOnClickListener{
+            val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            getResult.launch(cameraIntent)
+        }
+
         binding.bAjouter.setOnClickListener {
             var nc = binding.edNomverna.text.toString().trim()
             var ns = binding.edNomscient.text.toString().trim()
@@ -82,6 +109,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         activateArrosElem(binding.arros2,false)
         activateArrosElem(binding.arros3,false)
     }
+
 
     fun afficherDialog( s: String ){
         context?.let {
@@ -151,4 +179,24 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         }
 
     }
+ /*   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            imageView.setImageURI(imageUri)
+        }
+        if (resultCode == RESULT_OK && requestCode == takeimage && data != null){
+            imageView.setImageBitmap(data.extras?.get("data") as Bitmap)
+        }
+    }
+    */
+    private val getResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                imageView.setImageURI(it.data?.data)
+                imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+            }
+        }
 }
