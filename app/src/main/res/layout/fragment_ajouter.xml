@@ -4,12 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
     tools:context=".AjouterFragment"
     android:orientation="vertical">
+    <!-- la balise principale a été dégraissée et son contenu transférer dans le premier
+    LinearLayout endessous-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--Le layout qui suit sert uniquement à faire fonctionner le scrollview
+         car il est que la seule balise à l'intérieur d'un scrollview soit un layout
+         -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            >
 
     <LinearLayout
         android:orientation="horizontal"
@@ -55,9 +70,7 @@
             android:id="@+id/ed_uri"/>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="350dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,12 +89,13 @@
             />
     </LinearLayout>
 
-    </ScrollView>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ajouter"
         android:id="@+id/b_ajouter"
         />
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
