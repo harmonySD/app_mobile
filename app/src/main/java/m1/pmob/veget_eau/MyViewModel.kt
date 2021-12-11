@@ -14,6 +14,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     val plantes = dao.getAllPlants()
     //pour recherche plabtes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
+    lateinit var plantebn : Eplante;
 
     fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
@@ -43,5 +44,10 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             }
 
         }.start()
+    }
+    fun getPlanteByName(n:String){
+        Thread{
+            plantebn=dao.loadExactName(n);
+        }
     }
 }

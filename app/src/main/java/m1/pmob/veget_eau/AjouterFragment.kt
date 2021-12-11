@@ -76,12 +76,16 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
             //val uri = binding.edUri.text.toString().trim()
             lateinit var uri : String
-            if(uri_path.toString()==""){
+            //remplacer tout ca par juste uri = uri_path.tostring()
+            Log.d("uRI ","${uri_path.toString()}")
+            if(uri_path.toString()=="null"){
                 uri=""
-                afficherDialog("photo non ok")
+                Log.d("uRI ","${uri_path.toString()}")
+                //afficherDialog("photo non ok")
             }else{
                 uri=uri_path.toString()
-                afficherDialog("photo ok")
+                Log.d("uRI ","${uri_path.toString()}")
+                //afficherDialog("photo ok")
             }
             if (nc == "" && ns == "") {
                 afficherDialog("mettre au moins un nom :(")
@@ -197,7 +201,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                //uri_path = it.data?.data
+                uri_path = it.data?.data
+                Log.d("uRI ","${uri_path.toString()}")
                     if(b==true){
                         //marche pour prendre depuis gallery
                         imageView.setImageURI(it.data?.data)

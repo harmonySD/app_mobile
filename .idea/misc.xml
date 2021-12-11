@@ -8,7 +8,10 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.12760416666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.11145833333333334" />
         <entry key="app/src/main/res/layout/choix_freq.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fiche_activity.xml" value="0.1480978260869565" />
         <entry key="app/src/main/res/layout/fragment_ajouter.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_consulter.xml" value="0.1480978260869565" />
+        <entry key="app/src/main/res/layout/fragment_fiche.xml" value="0.1480978260869565" />
         <entry key="app/src/main/res/layout/fragment_modifier.xml" value="0.15353260869565216" />
         <entry key="app/src/main/res/layout/fragment_planning.xml" value="0.15353260869565216" />
         <entry key="app/src/main/res/layout/item_layout.xml" value="0.15353260869565216" />

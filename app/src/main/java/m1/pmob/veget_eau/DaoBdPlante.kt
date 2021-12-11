@@ -32,7 +32,7 @@ interface DaoBdPlante {
     @Query("SELECT * FROM PLANTE WHERE (nomscient like :nom || '%') OR (nomverna like :nom || '%')")
     fun loadPartialName(nom: String): List<Eplante>
 
-    @Query("SELECT * FROM PLANTE WHERE (nomscient like :nomscient ) AND (nomverna like :nomverna )")
-    fun loadExactName(nomverna:String,nomscient:String):Eplante
+    @Query("SELECT * FROM PLANTE WHERE (nomverna like :nomverna )")
+    fun loadExactName(nomverna:String):Eplante
 
 }
