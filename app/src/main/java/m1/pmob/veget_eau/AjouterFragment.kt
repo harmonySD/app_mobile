@@ -84,7 +84,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 //afficherDialog("photo non ok")
             }else{
                 uri=uri_path.toString()
-                Log.d("uRI ","${uri_path.toString()}")
+                //pb avec camera
+                Log.d("uRI ","${uri}")
                 //afficherDialog("photo ok")
             }
             if (nc == "" && ns == "") {
@@ -105,6 +106,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
+            binding.imageView.setImageBitmap(null)
             clearAllArros()
 
         }
@@ -156,7 +158,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 tab.add(e)
             }
         }
-
+        Log.d("uRI", "ICI  ${uri}}")
         model.addPlantesandArros(
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
