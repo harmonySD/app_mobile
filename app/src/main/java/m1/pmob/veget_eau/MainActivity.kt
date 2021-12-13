@@ -28,4 +28,6 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout,binding.pager) {tab,position -> tab.text=names[position]}
             .attach()
     }
+
+
 }

@@ -1,5 +1,7 @@
 package m1.pmob.veget_eau
 
+import android.app.Activity
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -9,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.Job
 import m1.pmob.veget_eau.databinding.FragmentConsulterBinding
 import m1.pmob.veget_eau.databinding.FragmentFicheBinding
 
@@ -34,23 +38,39 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         p.text = n
         Log.d("uRI", "n ${n}")
         //model.getPlanteByName(n)
-        //oskour(n)
+        var pl= n?.let { oskour(it) }
+       if (pl != null) {
+           Log.d("uRI","laaaaaaaaaaa")
+           Log.d("uRI", "${pl.uri}")
+           photo.setImageURI(Uri.parse(pl.uri))
+       }
         //var planteFiche= planteFi.value
 
-       Thread{
-          var  planteFi=(model.dao.loadExactName(n))
-           Log.d("uRI", "la ${Uri.parse(planteFi.uri)}")
-           //photo.setImageURI(Uri.parse(planteFi.uri))
-       }.start()
+
 
         //affiche juste la
         //hyp uri non stocker
 //        Log.d("uRI", "la ${Uri.parse(planteFiche?.uri)}")
       //  Log.d("uRI", "la ${planteFiche?.uri}")
         //Log.d("uRI", "nom ${planteFiche?.nomverna}")
-    photo.setImageURI(Uri.parse("content://media/external/images/media/193094"))
+   // photo.setImageURI(Uri.parse("content://media/external/images/media/193094"))
 
 
+    }
+    fun oskour(n:String):Eplante{
+        var p= Eplante(0, "", "", "")
+       var thread = Thread{
+           p = (model.dao.loadExactName(n))
+           Log.d("uRI", "la ${Uri.parse(p.uri)}")
+           //photo.setImageURI(Uri.parse(planteFi.uri))
+       }
+        thread.start();
+        thread.join()
+
+
+
+
+        return p
     }
 
 
