@@ -33,6 +33,6 @@ interface DaoBdPlante {
     fun loadPartialName(nom: String): List<Eplante>
 
     @Query("SELECT * FROM PLANTE WHERE (nomverna like :nomverna )")
-    fun loadExactName(nomverna:String):Eplante
+    fun loadExactName(nomverna:String?):Eplante
 
 }

@@ -90,7 +90,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 //afficherDialog("photo non ok")
             }else{
                 uri=uri_path.toString()
-                Log.d("uRI ","${uri_path.toString()}")
+                //pb avec camera
+                Log.d("uRI ","${uri}")
                 //afficherDialog("photo ok")
             }
 
@@ -114,7 +115,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
-            clearAllArros() // remisse à zéro de tous les arrosages pour nouvelle entrée
+            binding.imageView.setImageBitmap(null)
+            clearAllArros() // remise à zéro de tous les arrosages pour nouvelle entrée
 
         }
 
@@ -169,7 +171,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 tab.add(e)
             }
         }
-
+        Log.d("uRI", "ICI  ${uri}}")
         model.addPlantesandArros( //demande au viewmodel de faire ajouter dans la bd la plante et ses arrosage
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
@@ -228,5 +230,4 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                     }
             }
         }
-
 }

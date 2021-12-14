@@ -33,4 +33,6 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout,binding.pager) {tab,position -> tab.text=names[position]}
             .attach() // synchronise le Tablayout avec le gestionnaire des différents fragments pour qu'ils coopèrent
     }
+
+
 }
