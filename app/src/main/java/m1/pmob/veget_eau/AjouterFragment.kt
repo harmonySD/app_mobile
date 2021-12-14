@@ -34,8 +34,10 @@ import kotlin.collections.ArrayList
 
 
 class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
+    /*Fragment pour Ajouter une nouvelle plante à la base des plantes */
 
-    companion object {
+
+    companion object { // permet d'appeler le constructeur d'AjouterFragment de manière statique
         @JvmStatic
         fun newInstance()=AjouterFragment()
     }
@@ -43,38 +45,42 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     private lateinit var binding : FragmentAjouterBinding
     val model by lazy{
         ViewModelProvider(this).get(MyViewModel::class.java)}
+        // permet de récupérer le viewModel grâce à de la réflexion Java
 
-
-    lateinit var imageView: ImageView
-    var uri_path : Uri? = null
-    var b : Boolean =false
+    lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
+    var uri_path : Uri? = null //
+    var b : Boolean =false //TODO virer ça // booléen pour savoir si l'utilisateur a pris une photo ou l'a sélectionné dans sa galerie
     //ajouter ca dans bd
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAjouterBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState) // pour survivre aux rotations d'écran
 
+        // on lie l'interface graphique au code
+        binding = FragmentAjouterBinding.bind(view)
         imageView = binding.imageView
         var mChooseBtn= binding.chooseImageBtn
         var takeBn= binding.takeImageBtn
 
 
-        mChooseBtn.setOnClickListener{
+        mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
           b=true
            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             getResult.launch(gallery)
         }
-        takeBn.setOnClickListener{
+
+        takeBn.setOnClickListener{ // écouteur pour le bouton de demande de capture de photo pour la plante
            b=false
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }
 
-        binding.bAjouter.setOnClickListener {
+        binding.bAjouter.setOnClickListener { // écouteur du bouton d'ajout de plante
+            // on enlève un éventuel excès d'espace dans le nom des plantes
             var nc = binding.edNomverna.text.toString().trim()
             var ns = binding.edNomscient.text.toString().trim()
             //val uri = binding.edUri.text.toString().trim()
+
             lateinit var uri : String
             //remplacer tout ca par juste uri = uri_path.tostring()
             Log.d("uRI ","${uri_path.toString()}")
@@ -87,28 +93,34 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 Log.d("uRI ","${uri_path.toString()}")
                 //afficherDialog("photo ok")
             }
-            if (nc == "" && ns == "") {
+
+            if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
                 afficherDialog("mettre au moins un nom :(")
-                return@setOnClickListener
+                return@setOnClickListener // pour ne pas sortir de l'application !
             } else if (nc == "") {
                 nc = "non communiqué"
             } else if (ns == "") {
                 ns = "non communiqué"
             }
 
-            if(!checkDates()){
+            if(!checkDates()){ // vérification des dates
                 Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                return@setOnClickListener // pour ne pas sortir de l'application !
             }
+
             addPlanteAndArros(nc,ns,uri)
 
+            //vidage des champs pour prochaine entrée
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
-            clearAllArros()
+            clearAllArros() // remisse à zéro de tous les arrosages pour nouvelle entrée
 
         }
-        //==================== PARTIE POUR LA FREQUENCE==================
+
+        //==================== ECOUTEURS POUR LA FREQUENCE DES ARROSAGES ==================
+
+        //écouteurs des boutons pour activer les formulaires des arrosages
         binding.arros1.chckactiv.setOnClickListener {
             activateArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
         }
@@ -120,7 +132,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         binding.arros3.chckactiv.setOnClickListener {
             activateArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
         }
-        // au début aucune fréquence n'est activée
+
+        // désactivation de tous les formulaires d'arrosage au lancement du fragment
         activateArrosElem(binding.arros1,false)
         activateArrosElem(binding.arros2,false)
         activateArrosElem(binding.arros3,false)
@@ -157,7 +170,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             }
         }
 
-        model.addPlantesandArros(
+        model.addPlantesandArros( //demande au viewmodel de faire ajouter dans la bd la plante et ses arrosage
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
     }
@@ -196,6 +209,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
 
     }
 
+    // ce champ stocke un lanceur d'activité attendant un résultat
+    // Il sert pour lancer l'une des deux activités de choix d'image pour la plante
+    // (par galerie ou par appareil photo)
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -203,15 +219,14 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uri_path = it.data?.data
                 Log.d("uRI ","${uri_path.toString()}")
-                    if(b==true){
+                    if(b){
                         //marche pour prendre depuis gallery
                         imageView.setImageURI(it.data?.data)
-                    }else if(b==false){
+                    }else if(!b){
                         //marche pour appareil photo
                         imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
                     }
-
-
             }
         }
+
 }
