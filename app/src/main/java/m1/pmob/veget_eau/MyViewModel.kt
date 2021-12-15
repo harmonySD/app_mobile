@@ -54,13 +54,13 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             if(uri!=null){
                 //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
                     val toread = FileInputStream(uri)
-                    val filetowrite = File(appcontext.cacheDir,n+""+ns+""+ret[0])
+                    val filetowrite = File(appcontext.cacheDir,n.trim()+""+ns.trim()+""+ret[0])
                     val towrite = FileOutputStream(filetowrite)
                     toread.copyTo(towrite)
                     toread.close()
                     towrite.close()
 
-
+                    dao.modifPlante(Eplante(ret[0],n.trim(),ns.trim(),appcontext.cacheDir.resolve(n.trim()+""+ns.trim()+""+ret[0]).toString()))
             }
         }.start()
     }
