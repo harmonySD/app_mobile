@@ -1,19 +1,25 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
     val dao = PlantsDatabase.getDatabase(application).myDao()
-    //pas besoin de recuppere elt de la liste
+    //pas besoin de recupere elt de la liste
     val plantes = dao.getAllPlants()
-    //pour recherche plabtes avec prefixes
+    //pour recherche plantes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
+    val appcontext= application.applicationContext
     //plantebn pb cest tjs a 0 :(
    //var plantebn = Eplante(0,"","","")
 
@@ -40,11 +46,22 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun addPlantesandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage){
         Thread{
+
             val ret : List<Long> = dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
             for (fakearros in lstfakearros){
                 dao.ajoutArros(Earrosage(idp=ret[0],type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
+            if(uri!=null){
+                //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
+                    val toread = FileInputStream(uri)
+                    val filetowrite = File(appcontext.cacheDir,n+""+ns+""+ret[0])
+                    val towrite = FileOutputStream(filetowrite)
+                    toread.copyTo(towrite)
+                    toread.close()
+                    towrite.close()
 
+
+            }
         }.start()
     }
    // fun getPlanteByName(n:String?):Eplante{
@@ -55,4 +72,6 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
      //   }.start()
        // return plantebn
    // }
+
+
 }

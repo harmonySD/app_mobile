@@ -45,10 +45,10 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     private lateinit var binding : FragmentAjouterBinding
     val model by lazy{
         ViewModelProvider(this).get(MyViewModel::class.java)}
-        // permet de récupérer le viewModel grâce à de la réflexion Java
+        // permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
 
     lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
-    var uri_path : Uri? = null //
+    var uri_path : Uri? = null // l'URI
     var b : Boolean =false //TODO virer ça // booléen pour savoir si l'utilisateur a pris une photo ou l'a sélectionné dans sa galerie
     //ajouter ca dans bd
 
@@ -75,25 +75,17 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             getResult.launch(cameraIntent)
         }
 
+
+
         binding.bAjouter.setOnClickListener { // écouteur du bouton d'ajout de plante
             // on enlève un éventuel excès d'espace dans le nom des plantes
             var nc = binding.edNomverna.text.toString().trim()
             var ns = binding.edNomscient.text.toString().trim()
             //val uri = binding.edUri.text.toString().trim()
 
-            lateinit var uri : String
-            //remplacer tout ca par juste uri = uri_path.tostring()
-            Log.d("uRI ","${uri_path.toString()}")
-            if(uri_path.toString()=="null"){
-                uri=""
-                Log.d("uRI ","${uri_path.toString()}")
-                //afficherDialog("photo non ok")
-            }else{
-                uri=uri_path.toString()
-                //pb avec camera
-                Log.d("uRI ","${uri}")
-                //afficherDialog("photo ok")
-            }
+             var uri = uri_path.toString()
+            if(uri !="")
+
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
                 afficherDialog("mettre au moins un nom :(")
@@ -107,6 +99,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             if(!checkDates()){ // vérification des dates
                 Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // pour ne pas sortir de l'application !
+
             }
 
             addPlanteAndArros(nc,ns,uri)
@@ -171,7 +164,6 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 tab.add(e)
             }
         }
-        Log.d("uRI", "ICI  ${uri}}")
         model.addPlantesandArros( //demande au viewmodel de faire ajouter dans la bd la plante et ses arrosage
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray() )
         )
