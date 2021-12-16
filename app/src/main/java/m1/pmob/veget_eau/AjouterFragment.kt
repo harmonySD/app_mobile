@@ -83,7 +83,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
             //val uri = binding.edUri.text.toString().trim()
 
-             var uri = uri_path.toString()
+             var uri = (uri_path!!.getPath()!!)
             if(uri !="")
 
 
@@ -212,7 +212,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uri_path = it.data?.data
-                Log.d("uRI ","${uri_path.toString()}")
+                Log.d("URI LeData","${it.data?.data}")
+                Log.d("URI LeDataPath","${it.data?.data!!.path}")
                     if(b){
                         //marche pour prendre depuis gallery
                         imageView.setImageURI(it.data?.data)

@@ -1,7 +1,10 @@
 package m1.pmob.veget_eau
 
 import android.app.Activity
+import android.app.Application
+import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -37,12 +40,16 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         val n=activity?.intent?.getStringExtra("plante")
         p.text = n
         Log.d("uRI", "n ${n}")
+
         //model.getPlanteByName(n)
         var pl= n?.let { oskour(it) }
        if (pl != null) {
-           Log.d("uRI","laaaaaaaaaaa")
-           Log.d("uRI", "${pl.uri}")
-           photo.setImageURI(Uri.parse(pl.uri))
+
+           Log.d("URI fiche", "${pl.uri}")
+           Log.d("URI fiche parse", "${Uri.parse(pl.uri)}")
+           val bmp:Bitmap = BitmapFactory.decodeStream(view.context.contentResolver.openInputStream(Uri.parse(pl.uri)))
+            photo.setImageBitmap(bmp)
+            //photo.setImageURI(Uri.parse(pl.uri))
        }
         //var planteFiche= planteFi.value
 
