@@ -52,10 +52,11 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 dao.ajoutArros(Earrosage(idp=ret[0],type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
             Log.d("URI viewmodel",uri!!)
-            /*
+
             if(uri!=null){
                 //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
-                    val toread = FileInputStream(uri)
+
+                    val toread = appcontext.contentResolver.openInputStream(Uri.parse(uri))!!
                     val filetowrite = File(appcontext.cacheDir,n.trim()+""+ns.trim()+""+ret[0])
                     val towrite = FileOutputStream(filetowrite)
                     toread.copyTo(towrite)
@@ -63,7 +64,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                     towrite.close()
 
                     dao.modifPlante(Eplante(ret[0],n.trim(),ns.trim(),appcontext.cacheDir.resolve(n.trim()+""+ns.trim()+""+ret[0]).toString()))
-            }*/
+            }
         }.start()
     }
    // fun getPlanteByName(n:String?):Eplante{

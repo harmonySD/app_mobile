@@ -49,7 +49,8 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
             if(pl.uri !="null"){
                Log.d("uRI", " sans parse ${pl.uri}")
                Log.d("uRI", "avec ${Uri.parse(pl.uri)}")
-               val bmp:Bitmap = BitmapFactory.decodeStream(view.context.contentResolver.openInputStream(Uri.parse(pl.uri)))
+               val bmp:Bitmap = BitmapFactory.decodeFile(pl.uri)
+              // decodeStream(view.context.contentResolver.openInputStream(pl.uri)))
                 photo.setImageBitmap(bmp)
                 }
 
