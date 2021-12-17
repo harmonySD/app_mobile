@@ -81,10 +81,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             // on enlève un éventuel excès d'espace dans le nom des plantes
             var nc = binding.edNomverna.text.toString().trim()
             var ns = binding.edNomscient.text.toString().trim()
-            //val uri = binding.edUri.text.toString().trim()
 
-             var uri = (uri_path!!.getPath()!!)
-            if(uri !="")
+            var uri = uri_path.toString()
+
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
