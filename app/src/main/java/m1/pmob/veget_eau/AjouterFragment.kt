@@ -83,6 +83,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
 
             var uri = uri_path.toString()
+            Log.d("uRI", "ici $uri")
 
 
 
@@ -108,6 +109,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.edNomverna.text.clear()
             binding.edUri.text.clear()
             binding.imageView.setImageBitmap(null)
+            uri_path=null
             clearAllArros() // remise à zéro de tous les arrosages pour nouvelle entrée
 
         }

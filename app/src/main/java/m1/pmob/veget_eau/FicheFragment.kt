@@ -15,11 +15,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.Job
 import m1.pmob.veget_eau.databinding.FragmentConsulterBinding
 import m1.pmob.veget_eau.databinding.FragmentFicheBinding
+import java.io.File
 
 class FicheFragment : Fragment(R.layout.fragment_fiche) {
 
@@ -44,11 +46,13 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         //model.getPlanteByName(n)
         var pl= n?.let { oskour(it) }
        if (pl != null) {
+            if(pl.uri !="null"){
+               Log.d("uRI", " sans parse ${pl.uri}")
+               Log.d("uRI", "avec ${Uri.parse(pl.uri)}")
+               val bmp:Bitmap = BitmapFactory.decodeStream(view.context.contentResolver.openInputStream(Uri.parse(pl.uri)))
+                photo.setImageBitmap(bmp)
+                }
 
-           Log.d("URI fiche", "${pl.uri}")
-           Log.d("URI fiche parse", "${Uri.parse(pl.uri)}")
-           val bmp:Bitmap = BitmapFactory.decodeStream(view.context.contentResolver.openInputStream(Uri.parse(pl.uri)))
-            photo.setImageBitmap(bmp)
             //photo.setImageURI(Uri.parse(pl.uri))
        }
         //var planteFiche= planteFi.value
