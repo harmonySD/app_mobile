@@ -14,12 +14,14 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     val plantes = dao.getAllPlants()
     //pour recherche plabtes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
+    var ArrosageToCheck = MutableLiveData<List<Earrosage>>()
 
     fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
             dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
+
     fun addArros(idp:Long, type:Typearros,interval:Int, deb: Date, fin:Date){
         Thread{
             dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
@@ -34,6 +36,14 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         }.start()
     }
 
+    // cette fonction est normalement inutile car on ne l'utiliserai que dans le workerthread PlanningWorker
+    // hors il n'a pas d'UI donc on peut faire les opérations lourdes dedans sans problèmes
+    fun getArrosToCheckWater(){
+        Thread{
+            ArrosageToCheck.postValue(dao.getArrosageToCheckWater())
+        }.start()
+
+    }
 
     fun addPlantesandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage){
         Thread{
@@ -44,4 +54,6 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
         }.start()
     }
+
+
 }

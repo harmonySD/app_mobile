@@ -33,7 +33,9 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
 
     private lateinit var binding : FragmentAjouterBinding
     val model by lazy{
-        ViewModelProvider(this).get(MyViewModel::class.java)}
+        // on créé / récupère le viewModel de l'application pour faire des travaux en arrière plan
+        ViewModelProvider(this).get(MyViewModel::class.java)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
@@ -135,10 +137,10 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
             val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
             val fin:Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
-        if(deb == null||fin==null){
-            return false
+            if(deb == null||fin==null){
+                return false
+            }
         }
-    }
         return true
     }
 

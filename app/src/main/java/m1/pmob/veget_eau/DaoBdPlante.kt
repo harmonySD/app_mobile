@@ -14,6 +14,7 @@ interface DaoBdPlante {
 
     @Delete
     fun supprPlante(vararg p :Eplante):Int
+
     @Delete
     fun supprArros(vararg p :Earrosage):Int
 
@@ -22,6 +23,9 @@ interface DaoBdPlante {
 
     @Update
     fun modifArros(vararg p :Earrosage):Int
+
+    @Query("SELECT * From ARROSAGE WHERE idp IN (SELECT id FROM Plante WHERE hastoBeWatered) ")
+    fun getArrosageToCheckWater():List<Earrosage>
 
     @Query("SELECT * FROM PLANTE")
     fun getAllPlants():LiveData<List<Eplante>>
