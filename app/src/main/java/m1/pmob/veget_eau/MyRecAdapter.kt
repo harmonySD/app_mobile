@@ -31,7 +31,7 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
         holder.itemView.setOnClickListener {v->
             val iii = Intent(v.context, FicheActivity::class.java)
             val position= holder.absoluteAdapterPosition
-            iii.putExtra("plante",allPlantes[position].nomverna)
+            iii.putExtra("plante",allPlantes[position].id)
             Log.d("TOUCHER OK",allPlantes[position].nomverna)
             Log.d("TOUCHER OK",position.toString())
             //val iii = Intent(this, MultiplyActivity::class.java) ;

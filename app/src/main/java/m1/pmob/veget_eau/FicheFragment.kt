@@ -2,7 +2,6 @@ package m1.pmob.veget_eau
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,38 +22,48 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         fun newInstance()=FicheFragment()
     }
 
-    //var planteFi =MutableLiveData<Eplante>()
     private lateinit var  binding : FragmentFicheBinding
     lateinit var model : MyViewModel
-   // lateinit var planteFiche: Eplante
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)//permet de survivre aux rotations d'écrans ...
         binding = FragmentFicheBinding.bind(view)
         model = ViewModelProvider(this).get(MyViewModel::class.java)
-        var p: TextView = binding.planteF
+        var p: TextView = binding.plantePrincipale
+        var p2: TextView =binding.planteSecondaire
         var photo: ImageView =binding.imageplante
-        val n=activity?.intent?.getStringExtra("plante") // on récupère la plante que l'utilisateur voulait charger
-        p.text = n
-        Log.d("uRI", "n ${n}")
+        val n=activity?.intent?.getLongExtra("plante",-1) // on récupère l id de la plante que l'utilisateur voulait charger
+        //Log.d("uRI", "n ${n}")
 
-        //model.getPlanteByName(n) // pourquoi c'est en commentaire ?
-        var pl= n?.let { oskour(it) }
+        var pl= n?.let { oskour(it.toLong()) }
        if (pl != null) { // si on a bien trouver la plante que l'utilisateur voulait charger
-               try{ // tentative de chargement standard de la photo
-                val bmp:Bitmap = BitmapFactory.decodeFile(pl.uri)
-                photo.setImageBitmap(bmp)
-               } catch(np : NullPointerException){// si la photo est introuvable
-                   photo.setImageDrawable(resources.getDrawable( R.drawable.tokenplant))
-               }
+           Log.d("uRI", "iciiiiii")
+           try{ // tentative de chargement standard de la photo
+               val bmp:Bitmap =  BitmapFactory.decodeFile(pl.uri)
+               photo.setImageBitmap(bmp)
+
+           } catch(np : NullPointerException){// si la photo est introuvable
+               photo.setImageDrawable(resources.getDrawable( R.drawable.tokenplant))
+           }
+           //continuer avec les frequences etc
+           if(pl.nomverna=="non communiqué"){
+               p.text=pl.nomscient
+               p2.text=pl.nomverna
+           }else{
+               p.text = pl.nomverna
+               p2.text=pl.nomscient
+           }
+
+
+
+
        }
     }
-    fun oskour(n:String):Eplante{
+    fun oskour(n: Long):Eplante{
+        //peut etre mieux avec id pas string
         var p= Eplante(0, "", "", "")
        var thread = Thread{
            p = (model.dao.loadExactName(n))
-           Log.d("uRI", "la ${Uri.parse(p.uri)}")
-           //photo.setImageURI(Uri.parse(planteFi.uri))
        }
         thread.start()
         thread.join()

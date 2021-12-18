@@ -8,13 +8,20 @@
         tools:context=".FicheFragment"
         >
     <TextView
-            android:id="@+id/planteF"
+            android:id="@+id/plantePrincipale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_gravity="bottom"
-            android:ems="10"
+            android:textSize="32dp"
             android:hint="planteF"
+        />
+    <TextView
+        android:id="@+id/planteSecondaire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+
         />
     <ImageView
         android:id="@+id/imageplante"
