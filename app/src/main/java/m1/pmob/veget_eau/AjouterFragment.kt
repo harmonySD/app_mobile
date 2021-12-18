@@ -65,6 +65,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             clearAllArros()
 
         }
+
         //==================== PARTIE POUR LA FREQUENCE==================
         binding.arros1.chckactiv.setOnClickListener {
             activateArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
