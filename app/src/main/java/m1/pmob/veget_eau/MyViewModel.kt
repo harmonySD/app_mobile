@@ -6,10 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
+import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -55,15 +52,31 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
             if(uri!=null){
                 //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
+                    try {
+                        val toread = appcontext.contentResolver.openInputStream(Uri.parse(uri))!!
+                        val filetowrite =
+                            File(appcontext.cacheDir, n.trim() + "" + ns.trim() + "" + ret[0])
+                        val towrite = FileOutputStream(filetowrite)
+                        toread.copyTo(towrite)
+                        toread.close()
+                        towrite.close()
 
-                    val toread = appcontext.contentResolver.openInputStream(Uri.parse(uri))!!
-                    val filetowrite = File(appcontext.cacheDir,n.trim()+""+ns.trim()+""+ret[0])
-                    val towrite = FileOutputStream(filetowrite)
-                    toread.copyTo(towrite)
-                    toread.close()
-                    towrite.close()
+                        dao.modifPlante(
+                            Eplante(
+                                ret[0], // id de  la plante qu'on souhaite modifier
+                                n.trim(), // nom normal à ne pas modifier
+                                ns.trim(), // nom scientifique à ne pas modifier
+                                appcontext.cacheDir.resolve(n.trim() + "" + ns.trim() + "" + ret[0]).toString()))
+                                //chemin vers le nouveau fichier contenant l'image
+                    }catch(fne: FileNotFoundException){ // si le fichier n'existe pas, on ajoute l'image standard de plante
+                        dao.modifPlante(
+                            Eplante(
+                                ret[0], // id de  la plante qu'on souhaite modifier
+                                n.trim(), // nom normal à ne pas modifier
+                                ns.trim(), // nom scientifique à ne pas modifier
+                               null))
 
-                    dao.modifPlante(Eplante(ret[0],n.trim(),ns.trim(),appcontext.cacheDir.resolve(n.trim()+""+ns.trim()+""+ret[0]).toString()))
+                    }
             }
         }.start()
     }
