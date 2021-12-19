@@ -64,13 +64,13 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
 
 
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
-          b=true
-           val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            b=true
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             getResult.launch(gallery)
         }
 
         takeBn.setOnClickListener{ // écouteur pour le bouton de demande de capture de photo pour la plante
-           b=false
+            b=false
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }

@@ -82,13 +82,4 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         return p
     }
 
-   /* fun getArrosForP(n: Long): LiveData<List<Earrosage>>{
-        lateinit var p:LiveData<List<Earrosage>>
-        var thread =Thread{
-            p=(model.dao.getPlantArros(n))
-        }
-        thread.start()
-        thread.join()
-        return p
-    }*/
 }
