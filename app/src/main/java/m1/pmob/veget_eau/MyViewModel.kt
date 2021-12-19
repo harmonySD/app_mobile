@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.io.*
 import java.util.*
@@ -16,9 +17,9 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     val plantes = dao.getAllPlants()
     //pour recherche plantes avec prefixes
     var certainesPlantes = MutableLiveData<List<Eplante>>()
+    var listeArros = MutableLiveData<List<Earrosage>>()
     val appcontext= application.applicationContext
-    //plantebn pb cest tjs a 0 :(
-   //var plantebn = Eplante(0,"","","")
+
 
 
     fun addPlantes(n: String, ns: String, uri: String?){
@@ -38,6 +39,13 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             Log.d("uRI", "vmod${dao.loadPartialName(p)}")
             certainesPlantes.postValue(dao.loadPartialName(p))
         }.start()
+    }
+
+    fun getArrosForP(p:Long){
+        Thread {
+            listeArros.postValue(dao.getPlantArros(p))
+        }.start()
+
     }
 
 
@@ -80,4 +88,6 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             }
         }.start()
     }
+
+
 }

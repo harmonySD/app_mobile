@@ -13,14 +13,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="15sp"
-            android:id="@+id/nomscient"/>
+            android:id="@+id/deb"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="15sp"
-            android:id="@+id/nomverna"/>
+            android:id="@+id/fin"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:id="@+id/intervale"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:id="@+id/type"/>
 
     </LinearLayout>
 </LinearLayout>
-

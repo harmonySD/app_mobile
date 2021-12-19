@@ -27,12 +27,16 @@ interface DaoBdPlante {
     fun getAllPlants():LiveData<List<Eplante>>
 
     @Query("SELECT * FROM ARROSAGE WHERE idp = :idrch ")
-    fun getPlantArros(idrch :Int):LiveData<Earrosage>
+    fun getPlantArros(idrch :Long):List<Earrosage>
 
     @Query("SELECT * FROM PLANTE WHERE (nomscient like :nom || '%') OR (nomverna like :nom || '%')")
     fun loadPartialName(nom: String): List<Eplante>
 
     @Query("SELECT * FROM PLANTE WHERE (id like :idp )")
     fun loadExactName(idp:Long?):Eplante
+
+
+
+
 
 }
