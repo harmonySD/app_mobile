@@ -64,11 +64,6 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
            model.listeArros.observe(viewLifecycleOwner){adapter.setArros(it)}
 
 
-
-
-
-
-
        }
     }
     fun getPlante(n: Long):Eplante{

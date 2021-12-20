@@ -50,10 +50,10 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun modifPlanteandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage,pop:Long){
         Thread{
-
+            Log.d("MYVIEWMODEL:modifplante", "pop = $pop")
             val ret : Int = dao.modifPlante(Eplante(id = pop,nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
             for (fakearros in lstfakearros){
-                dao.modifArros(Earrosage(idp=ret.toLong(),type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
+                dao.modifArros(Earrosage(idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
             Log.d("URI viewmodel",uri!!)
             Log.d("uRI", " dans appel $n")
@@ -72,7 +72,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
                     dao.modifPlante(
                         Eplante(
-                            ret.toLong(), // id de  la plante qu'on souhaite modifier
+                            pop.toLong(), // id de  la plante qu'on souhaite modifier
                             n.trim(), // nom normal à ne pas modifier
                             ns.trim(), // nom scientifique à ne pas modifier
                             appcontext.cacheDir.resolve(n.trim() + "" + ns.trim() + "" + ret.toLong()).toString()))
