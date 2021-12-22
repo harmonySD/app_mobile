@@ -52,6 +52,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         Thread{
             Log.d("MYVIEWMODEL:modifplante", " n=$n ns=$ns uri=$uri pop = $pop")
             val ret : Int = dao.modifPlante(Eplante(id = pop,nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
+            //changer uri
             for (fakearros in lstfakearros){
                 dao.modifArros(Earrosage(idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
@@ -82,7 +83,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                             pop , // id de  la plante qu'on souhaite modifier
                             n.trim(), // nom normal à ne pas modifier
                             ns.trim(), // nom scientifique à ne pas modifier
-                            null))
+                            uri))
                 }
             }
         }.start()

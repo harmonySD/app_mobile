@@ -114,13 +114,45 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 return@setOnClickListener // pour ne pas sortir de l'application !
 
             }
+            Log.d("uRI","ici la ")
+
             if(pop>-1) {
-                modifPlanteAndArros(nc, ns, uri,pop)
+                Log.d("uRI","ici")
+                if (pl != null) {
+                    if(pl.nomscient!=ns){
+                        if(pl.nomverna!=nc){
+                            if(pl.uri!=uri){
+                                modifPlanteAndArros(nc, ns, uri,pop)
+                            }else{
+                                modifPlanteAndArros(nc, ns, pl.uri!!,pop)
+                            }
+                        }else{
+                            if(pl.uri!=uri){
+                                modifPlanteAndArros(pl.nomverna, ns, uri,pop)
+                            }else{
+                                modifPlanteAndArros(pl.nomverna, ns, pl.uri!!,pop)
+                            }
+                        }
+                    }else {
+                        if (pl.nomverna != nc) {
+                            if (pl.uri != uri) {
+                                modifPlanteAndArros(nc, pl.nomscient, uri, pop)
+                            } else {
+                                Log.d("ici","ici dans else")
+                                modifPlanteAndArros(nc, pl.nomscient, pl.uri!!, pop)
+                            }
+                        } else {
+                            if (pl.uri != uri) {
+                                modifPlanteAndArros(pl.nomverna, pl.nomscient, uri, pop)
+                            } else {
+                                modifPlanteAndArros(pl.nomverna, pl.nomscient, pl.uri!!, pop,)
+                            }
+                        }
+                    }
+                }
             }
 
         }
-
-
 
     }
 
