@@ -50,14 +50,13 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun modifPlanteandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage,pop:Long){
         Thread{
-            Log.d("MYVIEWMODEL:modifplante", "pop = $pop")
+            Log.d("MYVIEWMODEL:modifplante", " n=$n ns=$ns uri=$uri pop = $pop")
             val ret : Int = dao.modifPlante(Eplante(id = pop,nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
             for (fakearros in lstfakearros){
                 dao.modifArros(Earrosage(idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
             Log.d("URI viewmodel",uri!!)
             Log.d("uRI", " dans appel $n")
-            Log.d("uRI", " dans appel$ret")
 
             if(uri!=null){
                 //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
@@ -80,11 +79,10 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 }catch(fne: FileNotFoundException){ // si le fichier n'existe pas, on ajoute l'image standard de plante
                     dao.modifPlante(
                         Eplante(
-                            ret.toLong(), // id de  la plante qu'on souhaite modifier
+                            pop , // id de  la plante qu'on souhaite modifier
                             n.trim(), // nom normal à ne pas modifier
                             ns.trim(), // nom scientifique à ne pas modifier
                             null))
-
                 }
             }
         }.start()
@@ -97,6 +95,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             val ret : List<Long> = dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
             for (fakearros in lstfakearros){
                 dao.ajoutArros(Earrosage(idp=ret[0],type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
+
             }
             Log.d("URI viewmodel",uri!!)
 

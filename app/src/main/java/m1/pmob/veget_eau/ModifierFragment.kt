@@ -33,7 +33,8 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
     }
     private lateinit var binding : FragmentModifierBinding
     val model by lazy{
-        ViewModelProvider(this).get(MyViewModel::class.java)}
+        ViewModelProvider(this).get(MyViewModel::class.java)
+    }
     // permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
     var b : Boolean =false
     lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
@@ -113,7 +114,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 return@setOnClickListener // pour ne pas sortir de l'application !
 
             }
-            if(pop.compareTo(-1)==1) {
+            if(pop>-1) {
                 modifPlanteAndArros(nc, ns, uri,pop)
             }
 
