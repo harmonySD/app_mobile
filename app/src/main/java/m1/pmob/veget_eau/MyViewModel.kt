@@ -32,6 +32,34 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
         }.start()
     }
+    fun suppPlantesAndarros(id:Long,n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage) {
+       // Log.d("tchooo", "bah ici hors thread  dans view model $id")
+        Thread {
+            Log.d("tchooo", "bah ici  dans view model $id")
+            for (fakearros in lstfakearros) {
+                dao.supprArros(
+                    Earrosage(
+                        idp = id,
+                        type = fakearros.type,
+                        interval = fakearros.interval,
+                        deb = fakearros.deb,
+                        fin = fakearros.fin
+                    )
+                )
+
+            }
+
+            val int: Int =
+                dao.supprPlante(
+                    Eplante(
+                        id = id,
+                        nomverna = n.trim(),
+                        nomscient = ns.trim(),
+                        uri = uri?.trim()
+                    )
+                )
+        }.start()
+    }
 
 
     fun getPlantesPrefix(p:String){

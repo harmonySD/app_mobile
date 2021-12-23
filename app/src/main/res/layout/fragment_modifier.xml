@@ -23,6 +23,12 @@
             android:paddingRight="16dp"
             android:paddingTop="16dp"
             >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="supprimer"
+                android:id="@+id/b_supp"
+                />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -116,6 +122,7 @@
                 android:text="modifier"
                 android:id="@+id/b_modifierr"
                 />
+
         </LinearLayout>
     </ScrollView>
 

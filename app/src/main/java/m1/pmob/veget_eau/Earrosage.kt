@@ -3,13 +3,14 @@ package m1.pmob.veget_eau
 import android.icu.util.DateInterval
 import androidx.annotation.NonNull
 import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import java.util.Date
 
 @Entity(tableName = "ARROSAGE",
     foreignKeys =[
         ForeignKey( entity = Eplante::class,
                 parentColumns = ["id"],
-                childColumns = ["idp"]
+                childColumns = ["idp"],onDelete = CASCADE
         )
     ]
 )

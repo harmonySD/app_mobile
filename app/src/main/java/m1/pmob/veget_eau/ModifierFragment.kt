@@ -88,6 +88,20 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }
+        binding.bSupp.setOnClickListener{
+            if (pl != null) {
+                Log.d("tchooo", "bah ici ")
+                val tab = ArrayList<Earrosage>(0)
+                for (e in arrayOf(  makeInexactArros(binding.arros1),
+                    makeInexactArros(binding.arros2),
+                    makeInexactArros(binding.arros3))){
+                    if(e != null){
+                        tab.add(e)
+                    }
+                }
+                model.suppPlantesAndarros(pl.id,pl.nomverna,pl.nomscient,pl.uri, *(tab.toTypedArray()))
+            }
+        }
 
 
 
