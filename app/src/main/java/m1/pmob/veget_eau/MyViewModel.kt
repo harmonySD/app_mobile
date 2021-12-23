@@ -80,9 +80,9 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         Thread{
             Log.d("MYVIEWMODEL:modifplante", " n=$n ns=$ns uri=$uri pop = $pop")
             val ret : Int = dao.modifPlante(Eplante(id = pop,nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
-            //changer uri
             for (fakearros in lstfakearros){
-                dao.modifArros(Earrosage(idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
+                Log.d("MYVIEWMODEL:modifplante", "${fakearros.id} ${fakearros.type} ${fakearros.interval} ${fakearros.deb} ${fakearros.fin} pop = $pop")
+                dao.modifArros(Earrosage(id=fakearros.id,idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
             }
             Log.d("URI viewmodel",uri!!)
             Log.d("uRI", " dans appel $n")
@@ -123,6 +123,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
             val ret : List<Long> = dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
             for (fakearros in lstfakearros){
+                Log.d("MYVIEWMODEL:ajoutplante", "${fakearros.id} ${fakearros.type} ${fakearros.interval} ${fakearros.deb} ${fakearros.fin} ")
                 dao.ajoutArros(Earrosage(idp=ret[0],type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
 
             }

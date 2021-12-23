@@ -75,8 +75,36 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             Log.d("uRI", "la uri =${pl.uri}")
             Log.d("uRI", "la uri =${pl.uri?.toUri()}")
             uri_path= pl.uri?.toUri()
+            //charger arrosage
+
+            model.getArrosForP(pl.id)
+            var arr =model.listeArros
+
+
+
+
 
         }
+        //==================== ECOUTEURS POUR LA FREQUENCE DES ARROSAGES ==================
+
+        //écouteurs des boutons pour activer les formulaires des arrosages
+        binding.arros1.chckactiv.setOnClickListener {
+            activateArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
+        }
+
+        binding.arros2.chckactiv.setOnClickListener {
+            activateArrosElem(binding.arros2,binding.arros2.chckactiv.isChecked)
+        }
+
+        binding.arros3.chckactiv.setOnClickListener {
+            activateArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
+        }
+
+        // désactivation de tous les formulaires d'arrosage au lancement du fragment
+        activateArrosElem(binding.arros1,false)
+        activateArrosElem(binding.arros2,false)
+        activateArrosElem(binding.arros3,false)
+
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
             b=true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
@@ -129,6 +157,8 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
             }
             Log.d("uRI","ici la ")
+            //charger arros ge
+
 
             if(pop>-1) {
                 Log.d("uRI","ici")
@@ -202,6 +232,17 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         }
         return true
     }
+
+    fun activateArrosElem(target:ChoixFreqBinding,newStatus:Boolean):Unit{ //permet d'activer ou de désactiver une fréquence d'arrosage
+        target.jourdeb.isEnabled = newStatus
+        target.moisdeb.isEnabled = newStatus
+        target.jourfin.isEnabled = newStatus
+        target.moisfin.isEnabled = newStatus
+        target.radbnormal.isEnabled = newStatus
+        target.radbnutri.isEnabled = newStatus
+        target.edtextfreqj.isEnabled = newStatus
+    }
+
     private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu pour servir temporairement.
         //TODO cette fonction sera très probablement réutilisable/déplaçable autre part!
         if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas "activée", on retourne !

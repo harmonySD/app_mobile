@@ -61,6 +61,7 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
         )
     }
 
+
     override fun getItemCount(): Int = allPlantes.size
 
     fun setPlantes(plante: List<Eplante>?) {
