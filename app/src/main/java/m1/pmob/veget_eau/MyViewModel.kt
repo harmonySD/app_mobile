@@ -32,35 +32,31 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
         }.start()
     }
-    fun suppPlantesAndarros(id:Long,n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage) {
-       // Log.d("tchooo", "bah ici hors thread  dans view model $id")
+    fun suppPlantesAndarros(id:Long) {
+       //TODO penser à supprimer l'image  aussi !
         Thread {
-            Log.d("tchooo", "bah ici  dans view model $id")
-            for (fakearros in lstfakearros) {
-                dao.supprArros(
-                    Earrosage(
-                        idp = id,
-                        type = fakearros.type,
-                        interval = fakearros.interval,
-                        deb = fakearros.deb,
-                        fin = fakearros.fin
-                    )
-                )
-
-            }
-
-            val int: Int =
-                dao.supprPlante(
-                    Eplante(
-                        id = id,
-                        nomverna = n.trim(),
-                        nomscient = ns.trim(),
-                        uri = uri?.trim()
-                    )
-                )
+            dao.supprPlante(id)
+            dao.supprAllArros(id)
         }.start()
     }
 
+    fun loadPlanteByID(idsrch:Long):MutableLiveData<Eplante>{
+        val plantholder : MutableLiveData<Eplante> = MutableLiveData<Eplante>()
+        Thread{
+
+            plantholder.postValue(dao.loadPlanteByID(idsrch))
+        }.start()
+        return  plantholder
+    }
+
+    fun loadAllArrosByID(idp:Long):MutableLiveData<Vector<Earrosage>>{
+        val arrosHolder : MutableLiveData<Vector<Earrosage>> = MutableLiveData<Vector<Earrosage>>()
+        Thread{
+
+            arrosHolder.postValue(Vector<Earrosage>(dao.getPlantArros(idp)))
+        }.start()
+        return  arrosHolder
+    }
 
     fun getPlantesPrefix(p:String){
         Thread {
@@ -69,12 +65,6 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         }.start()
     }
 
-    fun getArrosForP(p:Long){
-        Thread {
-            listeArros.postValue(dao.getPlantArros(p))
-        }.start()
-
-    }
 
     fun modifPlanteandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage,pop:Long){
         Thread{

@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,91 +17,79 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import m1.pmob.veget_eau.databinding.ChoixFreqBinding
-import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
 import m1.pmob.veget_eau.databinding.FragmentModifierBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+// 1 pull les arrosages  de la bd et les set up dans l'IG
+// 2 réfléchir à une méthode de transfert des seuls changements par masque binaire !
+// 3 transférer les seuls changements
+// appliquer les changements
 
 class ModifierFragment : Fragment(R.layout.fragment_modifier) {
-
+    // =============FIELDS========================
     companion object {
         @JvmStatic
         fun newInstance()=ModifierFragment()
     }
-    private lateinit var binding : FragmentModifierBinding
-    val model by lazy{
+    private lateinit var binding : FragmentModifierBinding  // binding pour gérer l'IG,
+    //lateinit  car on a besoin d'une vue qui ne sera connu qu'à onViewCreated
+
+    val model by lazy{// permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
         ViewModelProvider(this).get(MyViewModel::class.java)
     }
-    // permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
-    var b : Boolean =false
+
+    var b : Boolean =false // ce booléen sert à savoir si l'utilisateur a pris une photo ou  a chargé depuis son téléphone
+
     lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
+    lateinit var  PlanteRepres: Eplante
+    lateinit var  arrosPlanteRepres: Vector<Earrosage>
     var uri_path : Uri? = null // l'URI
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         binding = FragmentModifierBinding.bind(view)
         imageView = binding.imageView
         var mChooseBtn= binding.chooseImageBtn
         var takeBn= binding.takeImageBtn
-        var ns=binding.edNomscient
-        var nv=binding.edNomverna
-        var pop:Long= -1
+        var idPlanteRepres:Long= -1 // non on est sûr que tout s'est bien passé où on plante !
 
-        // remplir avec info de la plante
 
-        val n=activity?.intent?.getLongExtra("plante",-1) // on récupère l id de la plante que l'utilisateur voulait charger
-        var pl= n?.let { getPlante(it.toLong()) }
+        val n=activity?.intent?.getLongExtra("plante",-1) // récupération id de la plante que l'utilisateur voulait modifier
 
-        if (pl != null) { // si on a bien trouver la plante que l'utilisateur voulait charger
-            try { // tentative de chargement standard de la photo
-                val bmp: Bitmap = BitmapFactory.decodeFile(pl.uri)
-                imageView.setImageBitmap(bmp)
+        // récupération de toutes les données de la plante
+        // on conditionne la suite du chargment de l'UI à la réussite de ces opérations
+        model.loadPlanteByID(idPlanteRepres).observe(viewLifecycleOwner){
+            PlanteRepres = it
 
-            } catch (np: NullPointerException) {// si la photo est introuvable
-                imageView.setImageDrawable(resources.getDrawable(R.drawable.tokenplant))
+            model.loadAllArrosByID(PlanteRepres.id).observe(viewLifecycleOwner){
+                arrosPlanteRepres = it // attention ce it est le MutableLiveData<Vector<Earrosage>>
+                setUI() // tout le chargement du reste de l'UI
+                // est conditionné au chargement correct d'une plante et de ses éventuels arrosages
             }
-            if(pl.nomverna=="non communiqué"){
-                ns.setText(pl.nomscient)
-
-            }else if(pl.nomscient=="non communiqué"){
-                nv.setText(pl.nomverna)
-            }else{
-                nv.setText(pl.nomverna)
-                ns.setText(pl.nomscient)
-            }
-            pop=pl.id
-            Log.d("uRI", "la uri =${pl.uri}")
-            Log.d("uRI", "la uri =${pl.uri?.toUri()}")
-            uri_path= pl.uri?.toUri()
-            //charger arrosage
-
-            model.getArrosForP(pl.id)
-            var arr =model.listeArros
-
-
-
-
-
         }
+
+
         //==================== ECOUTEURS POUR LA FREQUENCE DES ARROSAGES ==================
 
         //écouteurs des boutons pour activer les formulaires des arrosages
         binding.arros1.chckactiv.setOnClickListener {
-            activateArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
         }
 
         binding.arros2.chckactiv.setOnClickListener {
-            activateArrosElem(binding.arros2,binding.arros2.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros2,binding.arros2.chckactiv.isChecked)
         }
 
         binding.arros3.chckactiv.setOnClickListener {
-            activateArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
         }
 
-        // désactivation de tous les formulaires d'arrosage au lancement du fragment
-        activateArrosElem(binding.arros1,false)
-        activateArrosElem(binding.arros2,false)
-        activateArrosElem(binding.arros3,false)
+
+
+        //==================== ECOUTEURS POUR LES BOUTONS DE CHOIX DE PHOTOS  ==================
 
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
             b=true
@@ -116,24 +102,16 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }
+
+
+       // ecouteur bouton supppression de plante
         binding.bSupp.setOnClickListener{
-            if (pl != null) {
-                Log.d("tchooo", "bah ici ")
-                val tab = ArrayList<Earrosage>(0)
-                for (e in arrayOf(  makeInexactArros(binding.arros1),
-                    makeInexactArros(binding.arros2),
-                    makeInexactArros(binding.arros3))){
-                    if(e != null){
-                        tab.add(e)
-                    }
-                }
-                model.suppPlantesAndarros(pl.id,pl.nomverna,pl.nomscient,pl.uri, *(tab.toTypedArray()))
-            }
+            //TODO  CONFIRMATION DE SUPPRESSION PUIS SUPPRESSION EFFECTIVE ET SORTIE DU FRAGMENT
+            model.suppPlantesAndarros(PlanteRepres.id)
         }
 
-
-
-        binding.bModifierr.setOnClickListener { // écouteur du bouton modification
+        // écouteur du bouton modification
+        binding.bModifierr.setOnClickListener {
             var ns = binding.edNomscient.text.toString().trim()
             var nc = binding.edNomverna.text.toString().trim()
             var uri = uri_path.toString()
@@ -150,46 +128,44 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             } else if (ns == "") {
                 ns = "non communiqué"
             }
-
             if(!checkDates()){ // vérification des dates
                 Toast.makeText(context,"Une date est  incorrecte !", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // pour ne pas sortir de l'application !
 
             }
-            Log.d("uRI","ici la ")
-            //charger arros ge
 
 
-            if(pop>-1) {
+            if(this::PlanteRepres.isInitialized) {
+
                 Log.d("uRI","ici")
-                if (pl != null) {
-                    if(pl.nomscient!=ns){
-                        if(pl.nomverna!=nc){
-                            if(pl.uri!=uri){
-                                modifPlanteAndArros(nc, ns, uri,pop)
+                if (PlanteRepres != null) {
+                    if(PlanteRepres.nomscient!=ns){
+                        if(PlanteRepres.nomverna!=nc){
+                            if(PlanteRepres.uri!=uri){
+                                modifPlanteAndArros(nc, ns, uri,idPlanteRepres)
                             }else{
-                                modifPlanteAndArros(nc, ns, pl.uri!!,pop)
+                                modifPlanteAndArros(nc, ns, PlanteRepres.uri!!,idPlanteRepres)
                             }
                         }else{
-                            if(pl.uri!=uri){
-                                modifPlanteAndArros(pl.nomverna, ns, uri,pop)
+                            if(PlanteRepres.uri!=uri){
+                                modifPlanteAndArros(PlanteRepres.nomverna, ns, uri,idPlanteRepres)
                             }else{
-                                modifPlanteAndArros(pl.nomverna, ns, pl.uri!!,pop)
+                                modifPlanteAndArros(PlanteRepres.nomverna, ns, PlanteRepres.uri!!,idPlanteRepres)
                             }
                         }
                     }else {
-                        if (pl.nomverna != nc) {
-                            if (pl.uri != uri) {
-                                modifPlanteAndArros(nc, pl.nomscient, uri, pop)
+                        if (PlanteRepres.nomverna != nc) {
+                            if (PlanteRepres.uri != uri) {
+                                modifPlanteAndArros(nc, PlanteRepres.nomscient, uri, idPlanteRepres)
                             } else {
                                 Log.d("ici","ici dans else")
-                                modifPlanteAndArros(nc, pl.nomscient, pl.uri!!, pop)
+                                modifPlanteAndArros(nc, PlanteRepres.nomscient, PlanteRepres.uri!!, idPlanteRepres)
                             }
                         } else {
-                            if (pl.uri != uri) {
-                                modifPlanteAndArros(pl.nomverna, pl.nomscient, uri, pop)
+                            if (PlanteRepres.uri != uri) {
+                                modifPlanteAndArros(PlanteRepres.nomverna, PlanteRepres.nomscient, uri, idPlanteRepres)
                             } else {
-                                modifPlanteAndArros(pl.nomverna, pl.nomscient, pl.uri!!, pop,)
+                                modifPlanteAndArros(PlanteRepres.nomverna, PlanteRepres.nomscient, PlanteRepres.uri!!, idPlanteRepres,)
                             }
                         }
                     }
@@ -200,15 +176,28 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
     }
 
-    //=============================== FONCTIONS AUX ======================================
-    fun getPlante(n: Long):Eplante{
-        var p= Eplante(0, "", "", "")
-        var thread = Thread{
-            p = (model.dao.loadExactName(n))
+    //=============================== AUX FUNCTIONS  ======================================
+
+    fun setUI(){
+        // L'UI sera modifié UNE FOIS QUE LA PLANTE AURA ETE EXTRAITE DE SA BD
+
+        try { // tentative de chargement standard de la photo
+            val bmp: Bitmap = BitmapFactory.decodeFile(PlanteRepres.uri)
+            imageView.setImageBitmap(bmp)
+
+        } catch (np: NullPointerException) {// si la photo est introuvable
+            imageView.setImageDrawable(resources.getDrawable(R.drawable.tokenplant,null))
         }
-        thread.start()
-        thread.join()
-        return p
+
+        binding.edNomverna.setText(  if(PlanteRepres.nomverna =="non communiqu") "" else PlanteRepres.nomverna)
+        binding.edNomscient.setText(  if(PlanteRepres.nomverna =="non communiqu") "" else PlanteRepres.nomscient)
+
+        uri_path= PlanteRepres.uri?.toUri()
+        //charger arrosage
+
+        setActivationArrosElem(binding.arros1,false)
+        setActivationArrosElem(binding.arros2,false)
+        setActivationArrosElem(binding.arros3,false)
     }
 
     fun afficherDialog( s: String ){
@@ -233,7 +222,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         return true
     }
 
-    fun activateArrosElem(target:ChoixFreqBinding,newStatus:Boolean):Unit{ //permet d'activer ou de désactiver une fréquence d'arrosage
+    fun setActivationArrosElem(target:ChoixFreqBinding, newStatus:Boolean){ //permet d'activer ou de désactiver une fréquence d'arrosage
         target.jourdeb.isEnabled = newStatus
         target.moisdeb.isEnabled = newStatus
         target.jourfin.isEnabled = newStatus
@@ -254,7 +243,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
 
-    private fun modifPlanteAndArros( nc:String, ns:String, uri:String, pop:Long){//ajoute la plante et les arrosages à la BD
+    private fun modifPlanteAndArros( nc:String, ns:String, uri:String, pop:Long){ // modifie une plante et ses arrosages éventuels
         val tab = ArrayList<Earrosage>(0)
         for (e in arrayOf(  makeInexactArros(binding.arros1),
             makeInexactArros(binding.arros2),
@@ -264,7 +253,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             }
         }
         Log.d("uRI", " dans appel $nc")
-        model.modifPlanteandArros( //demande au viewmodel de faire ajouter dans la bd la plante et ses arrosage
+        model.modifPlanteandArros( //demande au viewmodel de faire ajouter dans la bd la modification de la plante et de ses arrosages
             n = nc, ns = ns, uri = uri, *(tab.toTypedArray()), pop=pop
 
         )

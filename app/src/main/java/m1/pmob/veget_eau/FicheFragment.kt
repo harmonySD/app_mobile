@@ -3,12 +3,10 @@ package m1.pmob.veget_eau
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import m1.pmob.veget_eau.databinding.FragmentFicheBinding
@@ -49,7 +47,7 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
                photo.setImageBitmap(bmp)
 
            } catch(np : NullPointerException){// si la photo est introuvable
-               photo.setImageDrawable(resources.getDrawable( R.drawable.tokenplant))
+               photo.setImageDrawable(resources.getDrawable( R.drawable.tokenplant,null))
            }
            //affichage des noms avec tjs en premier un des noms communique
            if(pl.nomverna=="non communiqué"){
@@ -70,7 +68,7 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
         //peut etre mieux avec id pas string
         var p= Eplante(0, "", "", "")
        var thread = Thread{
-           p = (model.dao.loadExactName(n))
+           p = (model.dao.loadPlanteByID(n))
        }
         thread.start()
         thread.join()
