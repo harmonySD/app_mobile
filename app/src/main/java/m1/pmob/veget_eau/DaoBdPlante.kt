@@ -57,17 +57,17 @@ interface DaoBdPlante {
     // REQUÊTES POUR METTRE A JOUR UNE PARTIE D'UN ARROSAGE
     //INUTILES ????
 /*
-    @Query("UPDATE ARROSAGE SET interval =:interv WHERE id= :id AND idp = idp")
+    @Query("UPDATE ARROSAGE SET interval =:interv WHERE id= :id AND idp = :idp")
     fun updateArrosInterval(id: Long,idp:Long,interv:Int){}
 
-    @Query("UPDATE ARROSAGE SET type =:type WHERE id= :id AND idp = idp")
+    @Query("UPDATE ARROSAGE SET type =:type WHERE id= :id AND idp = :idp")
     fun updateTypearros(id: Long,idp:Long,type:Typearros){}
 
-    @Query("UPDATE ARROSAGE SET deb =:deb WHERE id= :id AND idp = idp")
+    @Query("UPDATE ARROSAGE SET deb =:deb WHERE id= :id AND idp = :idp")
     fun updateArrosDeb(id: Long,idp:Long,deb: Date)
 
 
-    @Query("UPDATE ARROSAGE SET fin =:fin WHERE id= :id AND idp = idp")
+    @Query("UPDATE ARROSAGE SET fin =:fin WHERE id= :id AND idp = :idp")
     fun updateArrosFin(id: Long,idp:Long,fin: Date)
 
 */
