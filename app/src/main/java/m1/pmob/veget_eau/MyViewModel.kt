@@ -66,43 +66,38 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun modifPlanteandArros(n:String,ns:String,uri:String?,vararg lstfakearros:Earrosage,pop:Long){
+    fun modifPlanteandArros(changep: Eplante,vararg lstarros:Earrosage){
         Thread{
-            Log.d("MYVIEWMODEL:modifplante", " n=$n ns=$ns uri=$uri pop = $pop")
-            val ret : Int = dao.modifPlante(Eplante(id = pop,nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
-            for (fakearros in lstfakearros){
-                Log.d("MYVIEWMODEL:modifplante", "${fakearros.id} ${fakearros.type} ${fakearros.interval} ${fakearros.deb} ${fakearros.fin} pop = $pop")
-                dao.modifArros(Earrosage(id=fakearros.id,idp=pop,type=fakearros.type,interval = fakearros.interval,deb=fakearros.deb,fin=fakearros.fin))
-            }
-            Log.d("URI viewmodel",uri!!)
-            Log.d("uRI", " dans appel $n")
-
-            if(uri!=null){
-                //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
+            var plantToWrite = changep
+            // on regarde si l'image dans l'uri a ete modifiée ou pas
+            // probleme que fait on de l'ancienne image ?????
+            if(!( changep.uri !=null && appcontext.cacheDir.resolve((changep.uri)).exists())){
+                //si on entre ici c'est que l'image à stocker a été modifiée ou était null
                 try {
-                    val toread = appcontext.contentResolver.openInputStream(Uri.parse(uri))!!
-                    val filetowrite =
-                        File(appcontext.cacheDir, n.trim() + "" + ns.trim() + "" + ret.toLong())
+                    val toread = appcontext.contentResolver.openInputStream(Uri.parse(changep.uri))!!
+                    val filetowrite = File(appcontext.cacheDir, changep.nomverna .trim() + "" + changep.nomscient.trim() +  changep.id)
+                    val newpth = filetowrite.toString()
                     val towrite = FileOutputStream(filetowrite)
                     toread.copyTo(towrite)
                     toread.close()
                     towrite.close()
-
-                    dao.modifPlante(
-                        Eplante(
-                            pop.toLong(), // id de  la plante qu'on souhaite modifier
-                            n.trim(), // nom normal à ne pas modifier
-                            ns.trim(), // nom scientifique à ne pas modifier
-                            appcontext.cacheDir.resolve(n.trim() + "" + ns.trim() + "" + ret.toLong()).toString()))
+                    // on applique le changement d'URI
+                    plantToWrite = Eplante(changep.id, changep.nomscient, changep.nomverna,newpth)
                     //chemin vers le nouveau fichier contenant l'image
                 }catch(fne: FileNotFoundException){ // si le fichier n'existe pas, on ajoute l'image standard de plante
-                    dao.modifPlante(
-                        Eplante(
-                            pop , // id de  la plante qu'on souhaite modifier
-                            n.trim(), // nom normal à ne pas modifier
-                            ns.trim(), // nom scientifique à ne pas modifier
-                            uri))
+                    plantToWrite = Eplante(
+                        changep.id,
+                        changep.nomscient,
+                        changep.nomverna,
+                        null
+                    )
                 }
+            }
+
+            val ret : Int = dao.modifPlante(plantToWrite)
+            dao.supprAllArros(plantToWrite.id)
+            for (arros in lstarros){
+                dao.ajoutArros(arros)
             }
         }.start()
     }
@@ -121,6 +116,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
             if(uri!=null){
                 //try{} // FAIRE UN TRY POUR ATTRAPPER LES URI INCORRECTS
+
                     try {
                         val toread = appcontext.contentResolver.openInputStream(Uri.parse(uri))!!
                         val filetowrite =

@@ -58,7 +58,7 @@ class FicheFragment : Fragment(R.layout.fragment_fiche) {
                p2.text=pl.nomscient
            }
            //affichage des frequences
-           model.getArrosForP(pl.id)
+           //model.getArrosForP(pl.id)// inutile on ne se sert jamais du résultat
            model.listeArros.observe(viewLifecycleOwner){adapter.setArros(it)}
 
 

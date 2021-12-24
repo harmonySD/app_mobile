@@ -32,8 +32,9 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         @JvmStatic
         fun newInstance()=ModifierFragment()
     }
+
     private lateinit var binding : FragmentModifierBinding  // binding pour gérer l'IG,
-    //lateinit  car on a besoin d'une vue qui ne sera connu qu'à onViewCreated
+    //lateinit  car on a besoin d'une vue qui ne sera connu qu'à onViewCreated !
 
     val model by lazy{// permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
         ViewModelProvider(this).get(MyViewModel::class.java)
@@ -49,18 +50,18 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         binding = FragmentModifierBinding.bind(view)
         imageView = binding.imageView
         var mChooseBtn= binding.chooseImageBtn
         var takeBn= binding.takeImageBtn
-        var idPlanteRepres:Long= -1 // non on est sûr que tout s'est bien passé où on plante !
 
 
-        val n=activity?.intent?.getLongExtra("plante",-1) // récupération id de la plante que l'utilisateur voulait modifier
+        // récupération id de la plante que l'utilisateur voulait modifier
+        val idPlanteRepres=activity?.intent?.getLongExtra("plante",-1)!!
 
         // récupération de toutes les données de la plante
         // on conditionne la suite du chargment de l'UI à la réussite de ces opérations
+        Log.wtf("Modif fragment","idplante repres"+idPlanteRepres.toString())
         model.loadPlanteByID(idPlanteRepres).observe(viewLifecycleOwner){
             PlanteRepres = it
 
@@ -87,8 +88,6 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             setActivationArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
         }
 
-
-
         //==================== ECOUTEURS POUR LES BOUTONS DE CHOIX DE PHOTOS  ==================
 
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
@@ -103,7 +102,6 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             getResult.launch(cameraIntent)
         }
 
-
        // ecouteur bouton supppression de plante
         binding.bSupp.setOnClickListener{
             //TODO  CONFIRMATION DE SUPPRESSION PUIS SUPPRESSION EFFECTIVE ET SORTIE DU FRAGMENT
@@ -115,65 +113,31 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             var ns = binding.edNomscient.text.toString().trim()
             var nc = binding.edNomverna.text.toString().trim()
             var uri = uri_path.toString()
-            Log.d("uRI", "ici uri =$uri")
-            Log.d("uRI", "$nc")
-
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
-                afficherDialog("mettre au moins un nom :(")
+                afficherDialog("Une plante doit avoir au moins un nom !")
                 return@setOnClickListener // pour ne pas sortir de l'application !
-            } else if (nc == "") {
-                nc = "non communiqué"
-            } else if (ns == "") {
-                ns = "non communiqué"
             }
+
+            nc =if(nc=="") "non communiqué" else nc
+            ns =if(ns=="") "non communiqué" else ns
+
             if(!checkDates()){ // vérification des dates
                 Toast.makeText(context,"Une date est  incorrecte !", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // pour ne pas sortir de l'application !
-
             }
 
-
-            if(this::PlanteRepres.isInitialized) {
-
-                Log.d("uRI","ici")
-                if (PlanteRepres != null) {
-                    if(PlanteRepres.nomscient!=ns){
-                        if(PlanteRepres.nomverna!=nc){
-                            if(PlanteRepres.uri!=uri){
-                                modifPlanteAndArros(nc, ns, uri,idPlanteRepres)
-                            }else{
-                                modifPlanteAndArros(nc, ns, PlanteRepres.uri!!,idPlanteRepres)
-                            }
-                        }else{
-                            if(PlanteRepres.uri!=uri){
-                                modifPlanteAndArros(PlanteRepres.nomverna, ns, uri,idPlanteRepres)
-                            }else{
-                                modifPlanteAndArros(PlanteRepres.nomverna, ns, PlanteRepres.uri!!,idPlanteRepres)
-                            }
-                        }
-                    }else {
-                        if (PlanteRepres.nomverna != nc) {
-                            if (PlanteRepres.uri != uri) {
-                                modifPlanteAndArros(nc, PlanteRepres.nomscient, uri, idPlanteRepres)
-                            } else {
-                                Log.d("ici","ici dans else")
-                                modifPlanteAndArros(nc, PlanteRepres.nomscient, PlanteRepres.uri!!, idPlanteRepres)
-                            }
-                        } else {
-                            if (PlanteRepres.uri != uri) {
-                                modifPlanteAndArros(PlanteRepres.nomverna, PlanteRepres.nomscient, uri, idPlanteRepres)
-                            } else {
-                                modifPlanteAndArros(PlanteRepres.nomverna, PlanteRepres.nomscient, PlanteRepres.uri!!, idPlanteRepres,)
-                            }
-                        }
-                    }
+            val nvEarros :Vector<Earrosage> = Vector<Earrosage>()
+            for(possib in arrayOf(binding.arros1, binding.arros2, binding.arros3)){
+                if(possib.chckactiv.isChecked){
+                    nvEarros.addElement(makeInexactArros(possib))
                 }
             }
 
-        }
+            modifPlanteAndArros(ns,nc,nvEarros)
 
+        }
     }
 
     //=============================== AUX FUNCTIONS  ======================================
@@ -193,7 +157,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         binding.edNomscient.setText(  if(PlanteRepres.nomverna =="non communiqu") "" else PlanteRepres.nomscient)
 
         uri_path= PlanteRepres.uri?.toUri()
-        //charger arrosage
+        //TODO il faut charger les arrosages ici
 
         setActivationArrosElem(binding.arros1,false)
         setActivationArrosElem(binding.arros2,false)
@@ -240,24 +204,17 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         val deb:Date = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")!!
         val fin:Date = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")!!
 
-        return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
+        return Earrosage(idp=PlanteRepres.id,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
 
-    private fun modifPlanteAndArros( nc:String, ns:String, uri:String, pop:Long){ // modifie une plante et ses arrosages éventuels
-        val tab = ArrayList<Earrosage>(0)
-        for (e in arrayOf(  makeInexactArros(binding.arros1),
-            makeInexactArros(binding.arros2),
-            makeInexactArros(binding.arros3))){
-            if(e != null){
-                tab.add(e)
-            }
-        }
-        Log.d("uRI", " dans appel $nc")
-        model.modifPlanteandArros( //demande au viewmodel de faire ajouter dans la bd la modification de la plante et de ses arrosages
-            n = nc, ns = ns, uri = uri, *(tab.toTypedArray()), pop=pop
-
+    private fun modifPlanteAndArros(scientName:String,vernaName:String,ArrosVect:Vector<Earrosage>){ // modifie une plante et ses arrosages éventuels
+        //demande au viewmodel de faire ajouter dans la bd la modification de la plante et de ses arrosages
+        model.modifPlanteandArros(
+            Eplante(PlanteRepres.id,vernaName,scientName,uri_path.toString())
+            ,*(ArrosVect.toTypedArray())
         )
     }
+
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()

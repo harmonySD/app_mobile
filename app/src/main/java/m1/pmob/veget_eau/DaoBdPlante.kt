@@ -44,7 +44,7 @@ interface DaoBdPlante {
     fun loadPlanteByID(idp:Long?):Eplante
 
     // REQUÊTES POUR METTRE A JOUR UNE PARTIE D'UNE PLANTE
-
+    // INUTILES ??
     @Query("UPDATE PLANTE SET nomverna =:nv WHERE id = :id ")
     fun updatePlanteVerna(id: Long,nv:String){}
 
@@ -55,7 +55,8 @@ interface DaoBdPlante {
     fun updateArrosInterval(id: Long,uri:String){}
 
     // REQUÊTES POUR METTRE A JOUR UNE PARTIE D'UN ARROSAGE
-
+    //INUTILES ????
+/*
     @Query("UPDATE ARROSAGE SET interval =:interv WHERE id= :id AND idp = idp")
     fun updateArrosInterval(id: Long,idp:Long,interv:Int){}
 
@@ -69,6 +70,6 @@ interface DaoBdPlante {
     @Query("UPDATE ARROSAGE SET fin =:fin WHERE id= :id AND idp = idp")
     fun updateArrosFin(id: Long,idp:Long,fin: Date)
 
-
+*/
 
 }
