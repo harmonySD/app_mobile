@@ -20,5 +20,6 @@ data class Earrosage(@PrimaryKey(autoGenerate = true)val id:Long =0 // id = 0 co
                      @NonNull val type:Typearros,
                      @NonNull val interval : Int,
                      @NonNull val deb : Date,
-                     @NonNull  val fin : Date
+                     @NonNull  val fin : Date,
+                     @NonNull val isSpecial : Boolean = false // pour savoir si c'est un arrosage particulier ou non
 )

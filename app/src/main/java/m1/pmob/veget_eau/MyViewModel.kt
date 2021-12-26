@@ -1,13 +1,11 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import java.io.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -21,12 +19,14 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     val appcontext= application.applicationContext
 
 
+    var ArrosageToCheck = MutableLiveData<List<Earrosage>>()
 
     fun addPlantes(n: String, ns: String, uri: String?){
         Thread{
             dao.ajoutPlante(Eplante(nomverna = n.trim(),nomscient = ns.trim(), uri = uri?.trim()))
         }.start()
     }
+
     fun addArros(idp:Long, type:Typearros,interval:Int, deb: Date, fin:Date){
         Thread{
             dao.ajoutArros(Earrosage(idp=idp,type=type,interval = interval,deb=deb,fin=fin))
@@ -60,11 +60,19 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     fun getPlantesPrefix(p:String){
         Thread {
-            Log.d("uRI", "vmod${dao.loadPartialName(p)}")
+            Log.d("getPlante", "${dao.loadPartialName(p)}")
             certainesPlantes.postValue(dao.loadPartialName(p))
         }.start()
     }
 
+    // cette fonction est normalement inutile car on ne l'utiliserai que dans le workerthread PlanningWorker
+    // hors il n'a pas d'UI donc on peut faire les opérations lourdes dedans sans problèmes
+    fun getArrosToCheckWater(){
+        Thread{
+            ArrosageToCheck.postValue(dao.getArrosageToCheckWater())
+        }.start()
+
+    }
 
     fun modifPlanteandArros(changep: Eplante,vararg lstarros:Earrosage){
         Thread{
@@ -145,6 +153,8 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             }
         }.start()
     }
+
+
 
 
 }

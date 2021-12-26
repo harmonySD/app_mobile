@@ -31,6 +31,12 @@ interface DaoBdPlante {
     @Update
     fun modifArros(vararg p :Earrosage):Int
 
+    @Query("UPDATE PLANTE SET hasBeenWatered = :newWater WHERE id = :idp ")
+    fun setWater(idp: Long,newWater:Boolean):Void
+
+    @Query("SELECT * From ARROSAGE  ")
+    fun getArrosageToCheckWater():List<Earrosage>
+
     @Query("SELECT * FROM PLANTE")
     fun getAllPlants():LiveData<List<Eplante>>
 
