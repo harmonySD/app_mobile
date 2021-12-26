@@ -16,7 +16,10 @@
         <item>Novembre</item>
         <item>Décembre</item>
     </string-array>
-
+    <string name ="WorkRequestID">DailyWork</string>
+    <string name="notification_channel_id">VEGETEAU_01</string>
+    <string name="notification_channel_name">VEGETEAU_CHANNEL</string>
+    <string name="notification_channel_description"> Canal de notification pour l\'application Vegeteau</string>
     <string-array name="Daysinmonth">
         <item>1</item>
         <item>2</item>

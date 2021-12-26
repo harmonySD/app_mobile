@@ -23,4 +23,5 @@
             android:screenOrientation="portrait"
             android:exported="true"/>
     </application>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 </manifest>
