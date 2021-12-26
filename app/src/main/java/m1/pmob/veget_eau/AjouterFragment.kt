@@ -52,8 +52,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     var b : Boolean =false //TODO virer ça // booléen pour savoir si l'utilisateur a pris une photo ou l'a sélectionné dans sa galerie
     //ajouter ca dans bd
         // on créé / récupère le viewModel de l'application pour faire des travaux en arrière plan
-        ViewModelProvider(this).get(MyViewModel::class.java)
-    }
+        //ViewModelProvider(this).get(MyViewModel::class.java)
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
