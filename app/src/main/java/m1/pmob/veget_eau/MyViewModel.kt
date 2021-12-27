@@ -1,11 +1,15 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
