@@ -32,13 +32,14 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout,binding.pager) {tab,position -> tab.text=names[position]}
             .attach()
         // on s'assure que chaque jour une vérif est faite de la bd et indique les plantes à arroser
-        PlanningWorker.schedule_work(applicationContext)
+        PlanningWorker.schedule_work(applicationContext) //TODO à déplacer dans le ViewModel et à lancer dans un thread à part
     }
     /*
     CE BOUT DE CODE EST _TRES_ INSPIRE DU SITE OFFICIEL D'ANDROID
     https://developer.android.com/training/notify-user/build-notification#kts
     */
-
+    //TODO il faut déplacer ça dans le ViewModel et le lancer dans un thread à part, pas sur le thread
+    // de l'ui !
     private fun createNotificationChannel() {
         // on doit créer un channel de notification pour envoyer des notifications
         // si on en possède déjà un ce n'est pas un problème (cf. docu notifications)
