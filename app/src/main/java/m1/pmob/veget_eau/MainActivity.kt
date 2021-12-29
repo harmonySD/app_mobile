@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import m1.pmob.veget_eau.databinding.ActivityMainBinding
 
@@ -28,18 +29,17 @@ class MainActivity : AppCompatActivity() {
         binding.pager.adapter=pagerAdapter
 
         setContentView(binding.root)
+        // on s'assure que chaque jour une vérif est faite de la bd et indique les plantes à arroser
+        ViewModelProvider(this).get(MyViewModel::class.java).setupWorker()
 
         TabLayoutMediator(binding.tabLayout,binding.pager) {tab,position -> tab.text=names[position]}
             .attach()
-        // on s'assure que chaque jour une vérif est faite de la bd et indique les plantes à arroser
-        PlanningWorker.schedule_work(applicationContext) //TODO à déplacer dans le ViewModel et à lancer dans un thread à part
     }
+
     /*
-    CE BOUT DE CODE EST _TRES_ INSPIRE DU SITE OFFICIEL D'ANDROID
-    https://developer.android.com/training/notify-user/build-notification#kts
-    */
-    //TODO il faut déplacer ça dans le ViewModel et le lancer dans un thread à part, pas sur le thread
-    // de l'ui !
+      CE BOUT DE CODE EST _TRES_ INSPIRE DU SITE OFFICIEL D'ANDROID
+      https://developer.android.com/training/notify-user/build-notification#kts
+      */
     private fun createNotificationChannel() {
         // on doit créer un channel de notification pour envoyer des notifications
         // si on en possède déjà un ce n'est pas un problème (cf. docu notifications)
