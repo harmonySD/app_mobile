@@ -3,14 +3,11 @@ package m1.pmob.veget_eau
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.icu.text.DateFormat
+import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.os.SystemClock.sleep
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import java.util.Date
-import androidx.core.util.rangeTo
-import androidx.lifecycle.ViewModelProvider
 import androidx.work.*
 
 
@@ -84,7 +81,8 @@ class PlanningWorker(appContext: Context, workerParams: WorkerParameters) :
                 //Construction d'une notification pouvant être skippée
                 //option pour choisir l'heure du check / de la notif ?
                 val notifBuilder = NotificationCompat.Builder(applicationContext, applicationContext.getString(R.string.notification_channel_id))
-                notifBuilder.setSmallIcon(R.mipmap.plante.)//sait pas quoi mettre comme icone de notif
+                notifBuilder.setSmallIcon(R.drawable.notif_icon)//sait pas quoi mettre comme icone de notif
+                //notifBuilder.setLargeIcon( BitmapFactory.decodeResource(Resources.getSystem(),R.mipmap.plante))
                 notifBuilder.setContentTitle("Veget\'eau")
                 notifBuilder.setContentText("Vous avez des plantes à arroser !")
                 notifBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT)
