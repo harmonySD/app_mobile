@@ -1,12 +1,17 @@
 package m1.pmob.veget_eau
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.provider.Contacts
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -19,13 +24,19 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
         lateinit var plantes: Eplante
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyRecAdapter.VH {
         val binding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val holder = VH(binding)
         holder.itemView.setOnClickListener {v->
             val iii = Intent(v.context, FicheActivity::class.java)
             val position= holder.absoluteAdapterPosition
+            iii.putExtra("plante",allPlantes[position].id)
+            Log.d("TOUCHER OK",allPlantes[position].nomverna)
             Log.d("TOUCHER OK",position.toString())
+            //val iii = Intent(this, MultiplyActivity::class.java) ;
+            //iii.putExtra("username",edit.text.toString());
+            //v.context.launcher.launch(iii)
             v.context.startActivity(iii)
 
         }
@@ -49,6 +60,7 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
                 Color.argb(30, 0, 0, 220)
         )
     }
+
 
     override fun getItemCount(): Int = allPlantes.size
 
