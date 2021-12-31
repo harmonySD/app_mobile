@@ -41,13 +41,11 @@ class ConsulterFragment : Fragment(R.layout.fragment_consulter) {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                //Log.d(TAG, "entre")
                 if (p0 == null) {
                     return
                 }
                 val pr = p0.toString().trim()
                 model.getPlantesPrefix(pr)
-                //Log.d(TAG, "qqc $pr")
             }
         })
 

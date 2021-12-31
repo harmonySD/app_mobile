@@ -32,27 +32,16 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
             val iii = Intent(v.context, FicheActivity::class.java)
             val position= holder.absoluteAdapterPosition
             iii.putExtra("plante",allPlantes[position].id)
-            Log.d("TOUCHER OK",allPlantes[position].nomverna)
-            Log.d("TOUCHER OK",position.toString())
-            //val iii = Intent(this, MultiplyActivity::class.java) ;
-            //iii.putExtra("username",edit.text.toString());
-            //v.context.launcher.launch(iii)
             v.context.startActivity(iii)
-
         }
         return holder
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        Log.d("ici", "$position")
         var p: TextView = holder.itemView.findViewById(R.id.nomscient)
         var c: TextView = holder.itemView.findViewById(R.id.nomverna)
-        //var sup: TextView=holder.itemView.findViewById(R.id.superficie)
         p.text = allPlantes[position].nomscient
-        //Log.d(TAG,"${p.text}")
         c.text = allPlantes[position].nomverna
-        //continent.text=allPays[position].continent
-        //sup.text=sortedList[position].superficie
         holder.itemView.setBackgroundColor(
             if (position % 2 == 0)
                 Color.argb(30, 0, 220, 0)
@@ -68,9 +57,7 @@ class MyRecAdapter():RecyclerView.Adapter<MyRecAdapter.VH>() {
         if (plante != null) {
             allPlantes = plante
             notifyDataSetChanged()
-            Log.d("adapter", "la ici,${allPlantes.size}")
         } else {
-            Log.d("adapter", "ici")
         }
     }
 }

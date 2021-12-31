@@ -1,5 +1,6 @@
 package m1.pmob.veget_eau
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -30,42 +31,41 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
     // =============FIELDS========================
     companion object {
         @JvmStatic
-        fun newInstance()=ModifierFragment()
+        fun newInstance() = ModifierFragment()
     }
 
-    private lateinit var binding : FragmentModifierBinding  // binding pour gérer l'IG,
+    private lateinit var binding: FragmentModifierBinding  // binding pour gérer l'IG,
     //lateinit  car on a besoin d'une vue qui ne sera connu qu'à onViewCreated !
 
-    val model by lazy{// permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
+    val model by lazy {// permet de récupérer le viewModel de l'APPLICATION grâce à de la réflexion Java
         ViewModelProvider(this).get(MyViewModel::class.java)
     }
 
-    var b : Boolean =false // ce booléen sert à savoir si l'utilisateur a pris une photo ou  a chargé depuis son téléphone
+    var b: Boolean =
+        false // ce booléen sert à savoir si l'utilisateur a pris une photo ou  a chargé depuis son téléphone
 
     lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
-    lateinit var  PlanteRepres: Eplante
-    lateinit var  arrosPlanteRepres: Vector<Earrosage>
-    var uri_path : Uri? = null // l'URI
-
+    lateinit var PlanteRepres: Eplante
+    lateinit var arrosPlanteRepres: Vector<Earrosage>
+    var uri_path: Uri? = null // l'URI
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentModifierBinding.bind(view)
         imageView = binding.imageView
-        var mChooseBtn= binding.chooseImageBtn
-        var takeBn= binding.takeImageBtn
+        var mChooseBtn = binding.chooseImageBtn
+        var takeBn = binding.takeImageBtn
 
 
         // récupération id de la plante que l'utilisateur voulait modifier
-        val idPlanteRepres=activity?.intent?.getLongExtra("plante",-1)!!
+        val idPlanteRepres = activity?.intent?.getLongExtra("plante", -1)!!
 
         // récupération de toutes les données de la plante
         // on conditionne la suite du chargment de l'UI à la réussite de ces opérations
-        Log.wtf("Modif fragment","idplante repres"+idPlanteRepres.toString())
-        model.loadPlanteByID(idPlanteRepres).observe(viewLifecycleOwner){
+        model.loadPlanteByID(idPlanteRepres).observe(viewLifecycleOwner) {
             PlanteRepres = it
 
-            model.loadAllArrosByID(PlanteRepres.id).observe(viewLifecycleOwner){
+            model.loadAllArrosByID(PlanteRepres.id).observe(viewLifecycleOwner) {
                 arrosPlanteRepres = it // attention ce it est le MutableLiveData<Vector<Earrosage>>
                 setUI() // tout le chargement du reste de l'UI
                 // est conditionné au chargement correct d'une plante et de ses éventuels arrosages
@@ -77,33 +77,33 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
         //écouteurs des boutons pour activer les formulaires des arrosages
         binding.arros1.chckactiv.setOnClickListener {
-            setActivationArrosElem(binding.arros1,binding.arros1.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros1, binding.arros1.chckactiv.isChecked)
         }
 
         binding.arros2.chckactiv.setOnClickListener {
-            setActivationArrosElem(binding.arros2,binding.arros2.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros2, binding.arros2.chckactiv.isChecked)
         }
 
         binding.arros3.chckactiv.setOnClickListener {
-            setActivationArrosElem(binding.arros3,binding.arros3.chckactiv.isChecked)
+            setActivationArrosElem(binding.arros3, binding.arros3.chckactiv.isChecked)
         }
 
         //==================== ECOUTEURS POUR LES BOUTONS DE CHOIX DE PHOTOS  ==================
 
-        mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
-            b=true
+        mChooseBtn.setOnClickListener { // écouteur pour le bouton de demande de choix de photo dans la galerie
+            b = true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             getResult.launch(gallery)
         }
 
-        takeBn.setOnClickListener{ // écouteur pour le bouton de demande de capture de photo pour la plante
-            b=false
-            val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        takeBn.setOnClickListener { // écouteur pour le bouton de demande de capture de photo pour la plante
+            b = false
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             getResult.launch(cameraIntent)
         }
 
-       // ecouteur bouton supppression de plante
-        binding.bSupp.setOnClickListener{
+        // ecouteur bouton supppression de plante
+        binding.bSupp.setOnClickListener {
             //TODO  CONFIRMATION DE SUPPRESSION PUIS SUPPRESSION EFFECTIVE ET SORTIE DU FRAGMENT
             model.suppPlantesAndarros(PlanteRepres.id)
         }
@@ -120,29 +120,30 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 return@setOnClickListener // pour ne pas sortir de l'application !
             }
 
-            nc =if(nc=="") "non communiqué" else nc
-            ns =if(ns=="") "non communiqué" else ns
+            nc = if (nc == "") "non communiqué" else nc
+            ns = if (ns == "") "non communiqué" else ns
 
-            if(!checkDates()){ // vérification des dates
-                Toast.makeText(context,"Une date est  incorrecte !", Toast.LENGTH_SHORT).show()
+            if (!checkArros()) { // vérification des dates
+                Toast.makeText(context, "Une date est  incorrecte !", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // pour ne pas sortir de l'application !
             }
 
-            val nvEarros :Vector<Earrosage> = Vector<Earrosage>()
-            for(possib in arrayOf(binding.arros1, binding.arros2, binding.arros3)){
-                if(possib.chckactiv.isChecked){
+            val nvEarros: Vector<Earrosage> = Vector<Earrosage>()
+            for (possib in arrayOf(binding.arros1, binding.arros2, binding.arros3)) {
+                if (possib.chckactiv.isChecked) {
                     nvEarros.addElement(makeInexactArros(possib))
                 }
             }
 
-            modifPlanteAndArros(ns,nc,nvEarros)
+            modifPlanteAndArros(ns, nc, nvEarros)
 
         }
     }
 
     //=============================== AUX FUNCTIONS  ======================================
 
-    fun setUI(){
+
+    fun setUI() {
         // L'UI sera modifié UNE FOIS QUE LA PLANTE AURA ETE EXTRAITE DE SA BD
 
         try { // tentative de chargement standard de la photo
@@ -150,43 +151,63 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
             imageView.setImageBitmap(bmp)
 
         } catch (np: NullPointerException) {// si la photo est introuvable
-            imageView.setImageDrawable(resources.getDrawable(R.drawable.tokenplant,null))
+            imageView.setImageDrawable(resources.getDrawable(R.drawable.tokenplant, null))
         }
 
-        binding.edNomverna.setText(  if(PlanteRepres.nomverna =="non communiqu") "" else PlanteRepres.nomverna)
-        binding.edNomscient.setText(  if(PlanteRepres.nomverna =="non communiqu") "" else PlanteRepres.nomscient)
+        binding.edNomverna.setText(if (PlanteRepres.nomverna == "non communiqu") "" else PlanteRepres.nomverna)
+        binding.edNomscient.setText(if (PlanteRepres.nomverna == "non communiqu") "" else PlanteRepres.nomscient)
 
-        uri_path= PlanteRepres.uri?.toUri()
+        uri_path = PlanteRepres.uri?.toUri()
         //TODO il faut charger les arrosages ici
+        if (arrosPlanteRepres.size > 0) {
+            setArrosElem(binding.arros1,arrosPlanteRepres[0])
+        } else setArrosElem(binding.arros1,null)
 
-        setActivationArrosElem(binding.arros1,false)
-        setActivationArrosElem(binding.arros2,false)
-        setActivationArrosElem(binding.arros3,false)
+        if (arrosPlanteRepres.size > 1) {
+            setArrosElem(binding.arros2,arrosPlanteRepres[1])
+        } else setArrosElem(binding.arros2,null)
+
+        if (arrosPlanteRepres.size > 2) {
+            setArrosElem(binding.arros3,arrosPlanteRepres[2])
+        } else setArrosElem(binding.arros3,null)
+
+
     }
 
-    fun afficherDialog( s: String ){
+    fun afficherDialog(s: String) {
         context?.let {
             AlertDialog.Builder(it)
-                .setMessage( s )
-                .setPositiveButton("OK"){ d, _ -> d.dismiss() }
+                .setMessage(s)
+                .setPositiveButton("OK") { d, _ -> d.dismiss() }
                 .show()
         }
         return
     }
 
-    private fun checkDates():Boolean{ // vérifie que les dates respectent bien un schéma correct avant ajout
+    private fun checkArros(): Boolean { // vérifie que les dates respectent bien un schéma correct avant ajout
+        // et que la fréquence est valide
         val DF = SimpleDateFormat("dd.MM.yyyy")
         for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
-            val  deb: Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
-            val fin: Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
+            if (!target.chckactiv.isChecked){continue}
+            val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
+            val fin:Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
             if(deb == null||fin==null){
+                return false
+            }
+
+            try{// vérification que le champ de fréquence est bien un nombre
+                target.edtextfreqj.text.toString().toInt()
+            }catch(e : Exception){
                 return false
             }
         }
         return true
     }
 
-    fun setActivationArrosElem(target:ChoixFreqBinding, newStatus:Boolean){ //permet d'activer ou de désactiver une fréquence d'arrosage
+    fun setActivationArrosElem(
+        target: ChoixFreqBinding,
+        newStatus: Boolean
+    ) { //permet d'activer ou de désactiver une fréquence d'arrosage
         target.jourdeb.isEnabled = newStatus
         target.moisdeb.isEnabled = newStatus
         target.jourfin.isEnabled = newStatus
@@ -196,22 +217,66 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         target.edtextfreqj.isEnabled = newStatus
     }
 
-    private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu pour servir temporairement.
-        //TODO cette fonction sera très probablement réutilisable/déplaçable autre part!
-        if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas "activée", on retourne !
-        val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
-        val DF = SimpleDateFormat("dd.MM.yyyy")
-        val deb:Date = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")!!
-        val fin:Date = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")!!
+    fun setArrosElem(target: ChoixFreqBinding, arrs: Earrosage?) { // cette fonction sert à charger le contenu d'un arrosage dans son UI
+        if(arrs == null){// si l'arrosage est null, on éteint l'UI et on retourne
+            setActivationArrosElem(target, true)
+            return
+        }
+        // il y a un arrosage à charger
+        target.chckactiv.isChecked = true
+        setActivationArrosElem(target, true)
+        val calend = Calendar.getInstance()
+        calend.timeInMillis = arrs.deb.time
+        target.jourdeb.setSelection(calend.get(Calendar.DAY_OF_MONTH) -1)
+        target.moisdeb.setSelection(calend.get(Calendar.MONTH) )
 
-        return Earrosage(idp=PlanteRepres.id,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
+        calend.timeInMillis = arrs.fin.time
+        target.jourfin.setSelection(calend.get(Calendar.DAY_OF_MONTH) -1)
+        target.moisfin.setSelection(calend.get(Calendar.MONTH) -1)
+
+        if (arrs.type == Typearros.STANDARD) {
+            target.radbnormal.isChecked = true
+            target.radbnutri.isChecked = false
+        } else {
+            target.radbnormal.isChecked = false
+            target.radbnutri.isChecked = true
+        }
+
+        target.edtextfreqj.text.clear()
+        target.edtextfreqj.text.insert(0, arrs.interval.toString())
+
     }
 
-    private fun modifPlanteAndArros(scientName:String,vernaName:String,ArrosVect:Vector<Earrosage>){ // modifie une plante et ses arrosages éventuels
+    private fun makeInexactArros(target: ChoixFreqBinding): Earrosage? { // créé une entite d'arrosage avec un idplante inconnu pour servir temporairement.
+
+        if (!target.chckactiv.isChecked) {
+            return null
+        } // si la fréquence n'est pas "activée", on retourne !
+        val type = if ( target.radbnormal.isChecked) Typearros.STANDARD else Typearros.NUTRITIF
+        val DF = SimpleDateFormat("dd.MM.yyyy")
+        val deb: Date =
+            DF.parse((target.jourdeb.selectedItemPosition + 1).toString() + "." + (target.moisdeb.selectedItemPosition + 1).toString() + ".2000")!!
+        val fin: Date =
+            DF.parse((target.jourfin.selectedItemPosition + 1).toString() + "." + (target.moisfin.selectedItemPosition + 1).toString() + ".2000")!!
+
+        return Earrosage(
+            idp = PlanteRepres.id,
+            type = type,
+            deb = deb,
+            fin = fin,
+            interval = target.edtextfreqj.text.toString().toInt()
+        )
+    }
+
+    private fun modifPlanteAndArros(
+        scientName: String,
+        vernaName: String,
+        ArrosVect: Vector<Earrosage>
+    ) { // modifie une plante et ses arrosages éventuels
         //demande au viewmodel de faire ajouter dans la bd la modification de la plante et de ses arrosages
         model.modifPlanteandArros(
-            Eplante(PlanteRepres.id,vernaName,scientName,uri_path.toString())
-            ,*(ArrosVect.toTypedArray())
+            Eplante(PlanteRepres.id, vernaName, scientName, uri_path.toString()),
+            *(ArrosVect.toTypedArray())
         )
     }
 
@@ -221,12 +286,10 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uri_path = it.data?.data
-                Log.d("URI LeData","${it.data?.data}")
-                Log.d("URI LeDataPath","${it.data?.data!!.path}")
-                if(b){
+                if (b) {
                     //marche pour prendre depuis gallery
                     imageView.setImageURI(it.data?.data)
-                }else if(!b){
+                } else if (!b) {
                     //marche pour appareil photo
                     imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
                 }

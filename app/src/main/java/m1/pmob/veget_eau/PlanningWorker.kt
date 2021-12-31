@@ -3,8 +3,6 @@ package m1.pmob.veget_eau
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.os.SystemClock.sleep
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,7 +19,7 @@ class PlanningWorker(appContext: Context, workerParams: WorkerParameters) :
             // cette fonction sert à s'assurer qu'un travail est prévu tout les jours pour vérifier la bd
             // elle essaie simplement d'en ajouter un et si il existe déjà il ne se passera rien.
             // on créé un constructeur pour le travail à réaliser
-            val workReqBuilder = PeriodicWorkRequestBuilder<PlanningWorker>(2, TimeUnit.MINUTES) // (1,TimeUnit.DAYS)
+            val workReqBuilder = PeriodicWorkRequestBuilder<PlanningWorker>(1,TimeUnit.DAYS)
             WorkManager.getInstance(cntxt).enqueueUniquePeriodicWork(// on envoie notre travail au système
                     cntxt.getString(R.string.WorkRequestID), // un id pour qu' on ai au maxium un seul travail.
                     ExistingPeriodicWorkPolicy.KEEP, // il doit normalement déjà exister, auquel cas on ne fait rien.
@@ -107,5 +105,4 @@ class PlanningWorker(appContext: Context, workerParams: WorkerParameters) :
         }
         return Result.success()
     }
-
 }

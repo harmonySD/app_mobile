@@ -41,27 +41,5 @@ class MainActivity : AppCompatActivity() {
             .attach() // synchronise le Tablayout avec le gestionnaire des différents fragments pour qu'ils coopèrent
     }
 
-    /*
-      CE BOUT DE CODE EST _TRES_ INSPIRE DU SITE OFFICIEL D'ANDROID
-      https://developer.android.com/training/notify-user/build-notification#kts
-      */
-    private fun createNotificationChannel() {
-        // on doit créer un channel de notification pour envoyer des notifications
-        // si on en possède déjà un ce n'est pas un problème (cf. docu notifications)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val id = getString(R.string.notification_channel_id)
-            val name = getString(R.string.notification_channel_name)
-            val descriptionText = getString(R.string.notification_channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(id, name, importance).apply {
-                description = descriptionText
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
 
 }

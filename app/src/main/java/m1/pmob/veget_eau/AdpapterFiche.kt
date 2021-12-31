@@ -26,7 +26,6 @@ class AdpapterFiche (): RecyclerView.Adapter<AdpapterFiche.VH>() {
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        Log.d("ici", "$position")
 
         var d: TextView = holder.itemView.findViewById(R.id.deb)
         var f: TextView = holder.itemView.findViewById(R.id.fin)
@@ -34,7 +33,6 @@ class AdpapterFiche (): RecyclerView.Adapter<AdpapterFiche.VH>() {
         var t: TextView = holder.itemView.findViewById(R.id.type)
         //var sup: TextView=holder.itemView.findViewById(R.id.superficie)
         d.text = allarros[position].deb.toString()
-        //Log.d(TAG,"${p.text}")
         f.text = allarros[position].fin.toString()
         i.text = allarros[position].interval.toString()
         t.text = allarros[position].type.toString()
@@ -55,9 +53,7 @@ class AdpapterFiche (): RecyclerView.Adapter<AdpapterFiche.VH>() {
         if (arrosage != null) {
             allarros = arrosage
             notifyDataSetChanged()
-            //Log.d("adapter", "la ici,${allPlantes.size}")
         } else {
-            Log.d("adapter", "ici")
         }
     }
 }

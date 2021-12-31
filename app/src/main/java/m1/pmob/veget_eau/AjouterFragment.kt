@@ -50,9 +50,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     lateinit var imageView: ImageView // aperçu  de l'image de la plante que l'utilisateur va ajouter
     var uri_path : Uri? = null // l'URI
     var b : Boolean =false //TODO virer ça // booléen pour savoir si l'utilisateur a pris une photo ou l'a sélectionné dans sa galerie
-    //ajouter ca dans bd
         // on créé / récupère le viewModel de l'application pour faire des travaux en arrière plan
-        //ViewModelProvider(this).get(MyViewModel::class.java)
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -86,8 +84,6 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
 
             var uri = uri_path.toString()
-            Log.d("uRI", "ici $uri")
-
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
@@ -99,11 +95,12 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 ns = "non communiqué"
             }
 
-            if(!checkDates()){ // vérification des dates
-                Toast.makeText(context,"Une date est  incorrecte !",Toast.LENGTH_SHORT).show()
+            if(!checkArros()){ // vérification des dates
+                afficherDialog("Un arrosage  est  incorrect !")
                 return@setOnClickListener // pour ne pas sortir de l'application !
-
             }
+
+
 
             addPlanteAndArros(nc,ns,uri)
 
@@ -114,7 +111,6 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             binding.imageView.setImageBitmap(null)
             uri_path=null
             clearAllArros() // remise à zéro de tous les arrosages pour nouvelle entrée
-
         }
 
         //==================== ECOUTEURS POUR LA FREQUENCE DES ARROSAGES ==================
@@ -176,7 +172,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     private fun makeInexactArros(target: ChoixFreqBinding):Earrosage?{ // créé une entite d'arrosage avec un idplante inconnu pour servir temporairement.
         //TODO cette fonction sera très probablement réutilisable/déplaçable autre part!
         if(!target.chckactiv.isChecked){return null} // si la fréquence n'est pas "activée", on retourne !
-        val type =  if(target.radbnutri.isSelected ) Typearros.STANDARD else Typearros.NUTRITIF
+        val type =  if(target.radbnormal.isChecked ) Typearros.STANDARD else Typearros.NUTRITIF
         val DF = SimpleDateFormat("dd.MM.yyyy")
         val deb:Date = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")!!
         val fin:Date = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")!!
@@ -184,12 +180,20 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         return Earrosage(idp=0,type=type,deb=deb,fin=fin,interval=target.edtextfreqj.text.toString().toInt())
     }
 
-    private fun checkDates():Boolean{ // vérifie que les dates respectent bien un schéma correct avant ajout
+    private fun checkArros():Boolean{ // vérifie que les dates respectent bien un schéma correct avant ajout
+        // et que la fréquence est valide
         val DF = SimpleDateFormat("dd.MM.yyyy")
         for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
+            if (! target.chckactiv.isChecked){continue}
             val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
             val fin:Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
             if(deb == null||fin==null){
+                return false
+            }
+
+            try{// vérification que le champ de fréquence est bien un nombre
+                target.edtextfreqj.text.toString().toInt()
+            }catch(e : Exception){
                 return false
             }
         }
@@ -216,8 +220,6 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uri_path = it.data?.data
-                Log.d("URI LeData","${it.data?.data}")
-                Log.d("URI LeDataPath","${it.data?.data!!.path}")
                     if(b){
                         //marche pour prendre depuis gallery
                         imageView.setImageURI(it.data?.data)
