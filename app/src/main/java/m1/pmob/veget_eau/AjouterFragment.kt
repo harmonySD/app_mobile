@@ -1,36 +1,33 @@
 package m1.pmob.veget_eau
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.VibrationEffect.DEFAULT_AMPLITUDE
-import android.os.Vibrator
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import m1.pmob.veget_eau.databinding.ChoixFreqBinding
 import m1.pmob.veget_eau.databinding.FragmentAjouterBinding
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Arrays.asList
 import kotlin.collections.ArrayList
+
+import android.content.ContextWrapper
+import android.graphics.drawable.BitmapDrawable
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 
 
 class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
@@ -67,12 +64,14 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
             b=true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            //Log.d("CAMERAMOI","$gallery")
             getResult.launch(gallery)
         }
 
         takeBn.setOnClickListener{ // écouteur pour le bouton de demande de capture de photo pour la plante
             b=false
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            //Log.d("CAMERAMOI","ici $cameraIntent")
             getResult.launch(cameraIntent)
         }
 
@@ -84,6 +83,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
 
             var uri = uri_path.toString()
+            Log.d("CAMERAMOI","ici $uri")
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
@@ -210,8 +210,69 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         }
 
     }
+    // Method to save an image to internal storage
+    private fun saveImageToInternalStorage(bitmap: Bitmap):Uri{
+        // Get the image from drawable resource as drawable object
+        //val drawable = context?.let { ContextCompat.getDrawable(it,drawableId) }
 
-    // ce champ stocke un lanceur d'activité attendant un résultat
+        // Get the bitmap from drawable object
+        //val bitmap = (drawable as BitmapDrawable).bitmap
+
+        // Get the context wrapper instance
+        val wrapper = ContextWrapper(context)
+
+        // Initializing a new file
+        // The bellow line return a directory in internal storage
+        var file = wrapper.getDir("images", Context.MODE_PRIVATE)
+
+
+        // Create a file to save the image
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try {
+            // Get the file output stream
+            val stream: OutputStream = FileOutputStream(file)
+
+            // Compress bitmap
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+
+            // Flush the stream
+            stream.flush()
+
+            // Close stream
+            stream.close()
+        } catch (e: IOException){ // Catch the exception
+            e.printStackTrace()
+        }
+
+        // Return the saved image uri
+        return Uri.parse(file.absolutePath)
+    }
+
+
+
+    // Method to save an image to gallery and return uri
+    private fun saveImage(bitmap: Bitmap, title:String):Uri{
+        // Get the image from drawable resource as drawable object
+       // val drawable = ContextCompat.getDrawable(applicationContext,drawable)
+
+        // Get the bitmap from drawable object
+        //val bitmap = (drawable as BitmapDrawable).bitmap
+
+        // Save image to gallery
+        val savedImageURL = MediaStore.Images.Media.insertImage(
+            requireContext().contentResolver,
+            bitmap,
+            title,
+            "Image of $title"
+        )
+
+        // Parse the gallery image url to uri
+        return Uri.parse(savedImageURL)
+    }
+
+
+// ce champ stocke un lanceur d'activité attendant un résultat
     // Il sert pour lancer l'une des deux activités de choix d'image pour la plante
     // (par galerie ou par appareil photo)
     private val getResult =
@@ -222,10 +283,17 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                 uri_path = it.data?.data
                     if(b){
                         //marche pour prendre depuis gallery
+
                         imageView.setImageURI(it.data?.data)
+                        Log.d("CAMERAMOI","ici ${it.data?.data}")
                     }else if(!b){
+                        Log.d("CAMERAMOI","ici aussiiiii")
                         //marche pour appareil photo
                         imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+                        val test=it.data?.extras?.get("data") as Bitmap
+
+                        uri_path=saveImage(test,"ooo")
+                        Log.d("CAMERAMOI","ici ${saveImage(test,"ooo")}")
                     }
             }
         }
