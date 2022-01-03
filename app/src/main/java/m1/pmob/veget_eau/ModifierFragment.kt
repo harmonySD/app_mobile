@@ -51,6 +51,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState) // pour survivre aux rotations d'écran
         binding = FragmentModifierBinding.bind(view)
         imageView = binding.imageView
         var mChooseBtn = binding.chooseImageBtn
