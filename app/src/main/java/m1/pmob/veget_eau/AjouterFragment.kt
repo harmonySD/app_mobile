@@ -58,14 +58,12 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
         mChooseBtn.setOnClickListener{ // écouteur pour le bouton de demande de choix de photo dans la galerie
             b=true
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            //Log.d("CAMERAMOI","$gallery")
             getResult.launch(gallery)
         }
 
         takeBn.setOnClickListener{ // écouteur pour le bouton de demande de capture de photo pour la plante
             b=false
             val cameraIntent= Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            //Log.d("CAMERAMOI","ici $cameraIntent")
             getResult.launch(cameraIntent)
         }
 
@@ -77,7 +75,6 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             var ns = binding.edNomscient.text.toString().trim()
 
             var uri = uri_path.toString()
-            Log.d("CAMERAMOI","ici $uri")
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
@@ -235,15 +232,11 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                         //marche pour prendre depuis gallery
 
                         imageView.setImageURI(it.data?.data)
-                        Log.d("CAMERAMOI","ici ${it.data?.data}")
                     }else if(!b){
-                        Log.d("CAMERAMOI","ici aussiiiii")
                         //marche pour appareil photo
                         imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
                         val test=it.data?.extras?.get("data") as Bitmap
-
                         uri_path=saveImage(test,"plante")
-                        Log.d("CAMERAMOI","ici ${saveImage(test,"plante")}")
                     }
             }
         }
