@@ -1,7 +1,6 @@
 package m1.pmob.veget_eau
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -22,12 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-import android.content.ContextWrapper
-import android.graphics.drawable.BitmapDrawable
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
+
 
 
 class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
@@ -107,7 +101,7 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
             //vidage des champs pour prochaine entrée
             binding.edNomscient.text.clear()
             binding.edNomverna.text.clear()
-            binding.edUri.text.clear()
+            //binding.edUri.text.clear()
             binding.imageView.setImageBitmap(null)
             uri_path=null
             clearAllArros() // remise à zéro de tous les arrosages pour nouvelle entrée
@@ -203,71 +197,27 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
     private fun clearAllArros(){ // vide les champs d'arros
         for (target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
             target.edtextfreqj.text.clear()
-            target.jourdeb.setSelection(0);
-            target.moisdeb.setSelection(0);
-            target.jourfin.setSelection(0);
-            target.moisfin.setSelection(0);
+            target.jourdeb.setSelection(0)
+            target.moisdeb.setSelection(0)
+            target.jourfin.setSelection(0)
+            target.moisfin.setSelection(0)
+            target.radbnormal.isChecked=false
+            target.radbnutri.isChecked=false
+            target.chckactiv.isChecked=false
+            activateArrosElem(target,false)
         }
 
     }
-    // Method to save an image to internal storage
-    private fun saveImageToInternalStorage(bitmap: Bitmap):Uri{
-        // Get the image from drawable resource as drawable object
-        //val drawable = context?.let { ContextCompat.getDrawable(it,drawableId) }
 
-        // Get the bitmap from drawable object
-        //val bitmap = (drawable as BitmapDrawable).bitmap
-
-        // Get the context wrapper instance
-        val wrapper = ContextWrapper(context)
-
-        // Initializing a new file
-        // The bellow line return a directory in internal storage
-        var file = wrapper.getDir("images", Context.MODE_PRIVATE)
-
-
-        // Create a file to save the image
-        file = File(file, "${UUID.randomUUID()}.jpg")
-
-        try {
-            // Get the file output stream
-            val stream: OutputStream = FileOutputStream(file)
-
-            // Compress bitmap
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-
-            // Flush the stream
-            stream.flush()
-
-            // Close stream
-            stream.close()
-        } catch (e: IOException){ // Catch the exception
-            e.printStackTrace()
-        }
-
-        // Return the saved image uri
-        return Uri.parse(file.absolutePath)
-    }
-
-
-
-    // Method to save an image to gallery and return uri
+    // sauvegarder l'image de la camera dans la gallerie pour l'enregistrer ensuite
+    //inspirer de https://android--code.blogspot.com/2018/04/android-kotlin-save-image-to-gallery.html
     private fun saveImage(bitmap: Bitmap, title:String):Uri{
-        // Get the image from drawable resource as drawable object
-       // val drawable = ContextCompat.getDrawable(applicationContext,drawable)
-
-        // Get the bitmap from drawable object
-        //val bitmap = (drawable as BitmapDrawable).bitmap
-
-        // Save image to gallery
         val savedImageURL = MediaStore.Images.Media.insertImage(
             requireContext().contentResolver,
             bitmap,
             title,
             "Image of $title"
         )
-
-        // Parse the gallery image url to uri
         return Uri.parse(savedImageURL)
     }
 
@@ -292,8 +242,8 @@ class AjouterFragment : Fragment(R.layout.fragment_ajouter) {
                         imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
                         val test=it.data?.extras?.get("data") as Bitmap
 
-                        uri_path=saveImage(test,"ooo")
-                        Log.d("CAMERAMOI","ici ${saveImage(test,"ooo")}")
+                        uri_path=saveImage(test,"plante")
+                        Log.d("CAMERAMOI","ici ${saveImage(test,"plante")}")
                     }
             }
         }
