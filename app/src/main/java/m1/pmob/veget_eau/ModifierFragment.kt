@@ -113,7 +113,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         binding.bModifierr.setOnClickListener {
             var ns = binding.edNomscient.text.toString().trim()
             var nc = binding.edNomverna.text.toString().trim()
-            var uri = uri_path.toString()
+
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
@@ -136,7 +136,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 }
             }
 
-            modifPlanteAndArros(ns, nc, nvEarros)
+            modifPlanteAndArros(nc, ns, nvEarros)
 
         }
     }
@@ -281,6 +281,19 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         )
     }
 
+    // sauvegarder l'image de la camera dans la gallerie pour l'enregistrer ensuite
+//inspiré de https://android--code.blogspot.com/2018/04/android-kotlin-save-image-to-gallery.html
+    private fun saveImage(bitmap: Bitmap, title: String): Uri {
+        val savedImageURL = MediaStore.Images.Media.insertImage(
+            requireContext().contentResolver,
+            bitmap,
+            title,
+            "Image of $title"
+        )
+        return Uri.parse(savedImageURL)
+    }
+
+
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -293,6 +306,8 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 } else if (!b) {
                     //marche pour appareil photo
                     imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+                    val test = it.data?.extras?.get("data") as Bitmap
+                    uri_path = saveImage(test, "plante")
                 }
             }
         }
