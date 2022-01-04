@@ -133,7 +133,15 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         // ecouteur bouton supppression de plante
         binding.bSupp.setOnClickListener {
             //TODO  CONFIRMATION DE SUPPRESSION PUIS SUPPRESSION EFFECTIVE ET SORTIE DU FRAGMENT
-            model.suppPlantesAndarros(PlanteRepres.id)
+            context?.let { it1 ->
+                AlertDialog.Builder(it1)
+                    .setMessage("supprimer vraiment cette plante?") .setCancelable(false)
+                    .setPositiveButton("OK") { d, _ ->
+                        model.suppPlantesAndarros(PlanteRepres.id)
+                        d.dismiss()
+                    }
+                    .setNegativeButton("NON") { d, _ -> d.dismiss() } .show()
+            }
         }
 
         // écouteur du bouton modification
@@ -163,7 +171,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 }
             }
 
-            modifPlanteAndArros(nc, ns, nvEarros)
+            modifPlanteAndArros(ns, nc, nvEarros)
 
         }
     }
