@@ -1,8 +1,10 @@
 package m1.pmob.veget_eau
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -15,6 +17,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import m1.pmob.veget_eau.databinding.ChoixFreqBinding
@@ -51,6 +54,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState) // pour survivre aux rotations d'écran
         binding = FragmentModifierBinding.bind(view)
         imageView = binding.imageView
         var mChooseBtn = binding.chooseImageBtn
@@ -98,8 +102,32 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
         takeBn.setOnClickListener { // écouteur pour le bouton de demande de capture de photo pour la plante
             b = false
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            getResult.launch(cameraIntent)
+            b = false
+            // on a besoin d'avoir les droits en lecture et en écriture sur le storage externe
+            // on regarde si on a les droits en lecture
+            var allowedexternR = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            // on regarde si on a les droits en écriture
+            var allowedexternW = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+
+            if (PackageManager.PERMISSION_GRANTED != allowedexternR
+                || PackageManager.PERMISSION_GRANTED != allowedexternW
+            ){ // si on est ici c'est qu'on n'a pas tous les droits requis
+                permissionAsker.launch(
+                    arrayOf<String>(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                )
+            }else{
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                getResult.launch(cameraIntent)
+            }
         }
 
         // ecouteur bouton supppression de plante
@@ -112,7 +140,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         binding.bModifierr.setOnClickListener {
             var ns = binding.edNomscient.text.toString().trim()
             var nc = binding.edNomverna.text.toString().trim()
-            var uri = uri_path.toString()
+
 
 
             if (nc == "" && ns == "") { // test qu'au moins un nom est renseigné
@@ -135,7 +163,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 }
             }
 
-            modifPlanteAndArros(ns, nc, nvEarros)
+            modifPlanteAndArros(nc, ns, nvEarros)
 
         }
     }
@@ -160,16 +188,16 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         uri_path = PlanteRepres.uri?.toUri()
         //TODO il faut charger les arrosages ici
         if (arrosPlanteRepres.size > 0) {
-            setArrosElem(binding.arros1,arrosPlanteRepres[0])
-        } else setArrosElem(binding.arros1,null)
+            setArrosElem(binding.arros1, arrosPlanteRepres[0])
+        } else setArrosElem(binding.arros1, null)
 
         if (arrosPlanteRepres.size > 1) {
-            setArrosElem(binding.arros2,arrosPlanteRepres[1])
-        } else setArrosElem(binding.arros2,null)
+            setArrosElem(binding.arros2, arrosPlanteRepres[1])
+        } else setArrosElem(binding.arros2, null)
 
         if (arrosPlanteRepres.size > 2) {
-            setArrosElem(binding.arros3,arrosPlanteRepres[2])
-        } else setArrosElem(binding.arros3,null)
+            setArrosElem(binding.arros3, arrosPlanteRepres[2])
+        } else setArrosElem(binding.arros3, null)
 
 
     }
@@ -187,17 +215,21 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
     private fun checkArros(): Boolean { // vérifie que les dates respectent bien un schéma correct avant ajout
         // et que la fréquence est valide
         val DF = SimpleDateFormat("dd.MM.yyyy")
-        for(target in arrayOf(binding.arros1,binding.arros2,binding.arros3)){
-            if (!target.chckactiv.isChecked){continue}
-            val  deb:Date? = DF.parse((target.jourdeb.selectedItemPosition+1).toString()+"."+(target.moisdeb.selectedItemPosition+1).toString()+".2000")
-            val fin:Date? = DF.parse((target.jourfin.selectedItemPosition+1).toString()+"."+(target.moisfin.selectedItemPosition+1).toString()+".2000")
-            if(deb == null||fin==null){
+        for (target in arrayOf(binding.arros1, binding.arros2, binding.arros3)) {
+            if (!target.chckactiv.isChecked) {
+                continue
+            }
+            val deb: Date? =
+                DF.parse((target.jourdeb.selectedItemPosition + 1).toString() + "." + (target.moisdeb.selectedItemPosition + 1).toString() + ".2000")
+            val fin: Date? =
+                DF.parse((target.jourfin.selectedItemPosition + 1).toString() + "." + (target.moisfin.selectedItemPosition + 1).toString() + ".2000")
+            if (deb == null || fin == null) {
                 return false
             }
 
-            try{// vérification que le champ de fréquence est bien un nombre
+            try {// vérification que le champ de fréquence est bien un nombre
                 target.edtextfreqj.text.toString().toInt()
-            }catch(e : Exception){
+            } catch (e: Exception) {
                 return false
             }
         }
@@ -217,8 +249,11 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         target.edtextfreqj.isEnabled = newStatus
     }
 
-    fun setArrosElem(target: ChoixFreqBinding, arrs: Earrosage?) { // cette fonction sert à charger le contenu d'un arrosage dans son UI
-        if(arrs == null){// si l'arrosage est null, on éteint l'UI et on retourne
+    fun setArrosElem(
+        target: ChoixFreqBinding,
+        arrs: Earrosage?
+    ) { // cette fonction sert à charger le contenu d'un arrosage dans son UI
+        if (arrs == null) {// si l'arrosage est null, on éteint l'UI et on retourne
             setActivationArrosElem(target, true)
             return
         }
@@ -227,12 +262,12 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         setActivationArrosElem(target, true)
         val calend = Calendar.getInstance()
         calend.timeInMillis = arrs.deb.time
-        target.jourdeb.setSelection(calend.get(Calendar.DAY_OF_MONTH) -1)
-        target.moisdeb.setSelection(calend.get(Calendar.MONTH) )
+        target.jourdeb.setSelection(calend.get(Calendar.DAY_OF_MONTH) - 1)
+        target.moisdeb.setSelection(calend.get(Calendar.MONTH))
 
         calend.timeInMillis = arrs.fin.time
-        target.jourfin.setSelection(calend.get(Calendar.DAY_OF_MONTH) -1)
-        target.moisfin.setSelection(calend.get(Calendar.MONTH) -1)
+        target.jourfin.setSelection(calend.get(Calendar.DAY_OF_MONTH) - 1)
+        target.moisfin.setSelection(calend.get(Calendar.MONTH) - 1)
 
         if (arrs.type == Typearros.STANDARD) {
             target.radbnormal.isChecked = true
@@ -252,7 +287,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         if (!target.chckactiv.isChecked) {
             return null
         } // si la fréquence n'est pas "activée", on retourne !
-        val type = if ( target.radbnormal.isChecked) Typearros.STANDARD else Typearros.NUTRITIF
+        val type = if (target.radbnormal.isChecked) Typearros.STANDARD else Typearros.NUTRITIF
         val DF = SimpleDateFormat("dd.MM.yyyy")
         val deb: Date =
             DF.parse((target.jourdeb.selectedItemPosition + 1).toString() + "." + (target.moisdeb.selectedItemPosition + 1).toString() + ".2000")!!
@@ -280,6 +315,19 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         )
     }
 
+    // sauvegarder l'image de la camera dans la gallerie pour l'enregistrer ensuite
+//inspiré de https://android--code.blogspot.com/2018/04/android-kotlin-save-image-to-gallery.html
+    private fun saveImage(bitmap: Bitmap, title: String): Uri {
+        val savedImageURL = MediaStore.Images.Media.insertImage(
+            requireContext().contentResolver,
+            bitmap,
+            title,
+            "Image of $title"
+        )
+        return Uri.parse(savedImageURL)
+    }
+
+
     private val getResult =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -292,7 +340,23 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
                 } else if (!b) {
                     //marche pour appareil photo
                     imageView.setImageBitmap(it.data?.extras?.get("data") as Bitmap)
+                    val test = it.data?.extras?.get("data") as Bitmap
+                    uri_path = saveImage(test, "plante")
                 }
             }
         }
+
+
+    //ce chammp sotcke un lanceur d'activité pour demander les droits en écriture
+// sur périphérique de stockage externe.
+// il sert pour pouvoir prendre une photo puis la stocker directement
+    private val permissionAsker = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        if (it[Manifest.permission.READ_EXTERNAL_STORAGE]!! && it[Manifest.permission.WRITE_EXTERNAL_STORAGE]!!) {
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            getResult.launch(cameraIntent)
+        }
+    }
 }
+
