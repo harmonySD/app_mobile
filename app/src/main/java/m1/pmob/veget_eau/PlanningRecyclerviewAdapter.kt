@@ -3,53 +3,63 @@ package m1.pmob.veget_eau
 import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckedTextView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import m1.pmob.veget_eau.databinding.ItemLayoutBinding
 
-class PlanningRecyclerviewAdapter(): RecyclerView.Adapter<PlanningRecyclerviewAdapter.VH>() {
-        private var allPlantes: List<Eplante> = listOf()
+class PlanningRecyclerviewAdapter(val colors: MutableList<String>): RecyclerView.Adapter<PlanningRecyclerviewAdapter.VH>() {
+        //private var allPlantes: List<Eplante> = listOf()
+        val checked = ArrayList<String>()
 
-        class VH(val binding: ItemLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
-            lateinit var plantes: Eplante
+    class VH(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    var listener =View.OnClickListener { view ->
+        val w=view as CheckedTextView
+        w.toggle()
+        if (w.isChecked){
+            checked.add(w.text.toString())
+        }else{
+            checked.remove(w.text.toString())
         }
+    }
+    fun removeChecked() { colors.removeAll(checked)
+        checked.clear()
+        notifyDataSetChanged()
+    }
+
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanningRecyclerviewAdapter.VH {
-            val binding =
-                ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            val holder = VH(binding)
-            holder.itemView.setOnClickListener { v ->
-                val iii = Intent(v.context, FicheActivity::class.java)
-                val position = holder.absoluteAdapterPosition
-                iii.putExtra("plante", allPlantes[position].id)
-                v.context.startActivity(iii)
-            }
-            return holder
+            //créer View d'un élément de la liste à partir de fichier layout xml
+            val v = LayoutInflater
+                .from(parent.getContext())
+                .inflate(android.R.layout.simple_list_item_checked, parent, false)
+
+            /*installer le listener sur chaque View */
+            v.setOnClickListener(listener)
+
+            //créer et retourner le ViewHolder
+            return VH(v)
         }
 
         override fun onBindViewHolder(holder: VH, position: Int) {
-            var p: TextView = holder.itemView.findViewById(R.id.nomscient)
-            var c: TextView = holder.itemView.findViewById(R.id.nomverna)
-            p.text = allPlantes[position].nomscient
-            c.text = allPlantes[position].nomverna
-            holder.itemView.setBackgroundColor(
-                if (position % 2 == 0)
-                    Color.argb(30, 0, 220, 0)
-                else
-                    Color.argb(30, 0, 0, 220)
-            )
+            /* recuperer la View :
+     * holder.itemView c'est la View associée à ce holder */
+            val checkedTextView = holder.itemView as CheckedTextView
+
+            /* mettre la valeur colors[position] dans la View */
+            checkedTextView.text = colors[position]
+
+            /* mettre à jour la propriété checked de la View */
+            checkedTextView.isChecked = checked.contains(colors[position])
+
         }
 
 
-        override fun getItemCount(): Int = allPlantes.size
+        override fun getItemCount(): Int = colors.size
 
-        fun setPlantes(plante: List<Eplante>?) {
-            if (plante != null) {
-                allPlantes = plante
-                notifyDataSetChanged()
-            } else {
-            }
-        }
+
     }

@@ -3,6 +3,7 @@ package m1.pmob.veget_eau
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
     }
     private lateinit var  binding : FragmentPlanningBinding
     lateinit var model : PlanningViewModel
-    lateinit var adapter: MyRecAdapter
+    lateinit var adapter: PlanningRecyclerviewAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -32,21 +33,27 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
         val recyclerView = binding.recyclerView
         recyclerView.hasFixedSize()
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = MyRecAdapter()
+            //adapter = MyRecAdapter()
+
+        val colors = resources.getStringArray(R.array.colors).toMutableList()
+        Log.d("CheckBoxList", "nombre =  ${colors.size}")
+        adapter = PlanningRecyclerviewAdapter(colors)
+
+        recyclerView.adapter = adapter
         recyclerView.adapter = adapter
         //observer
-        model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(model.plantsToWater.value)}
+       // model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(model.plantsToWater.value)}
 
 
         // ECOUTEURS POUR LES BOUTONS DES PLANTES
-        binding.SnoozeButton.setOnClickListener(){
+       // binding.SnoozeButton.setOnClickListener(){
 
-        }
+        //}
 
-        binding.waterButton.setOnClickListener(){
+//        binding.waterButton.setOnClickListener(){
 
 
-        }
+      //  }
     /* pas de champs de recherche de texte pour le moment
         binding.plantes.addTextChangedListener(object : TextWatcher {
             //val TAG: String = "pays watcher"
