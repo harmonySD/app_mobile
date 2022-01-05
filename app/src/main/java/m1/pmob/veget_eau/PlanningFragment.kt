@@ -12,12 +12,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import m1.pmob.veget_eau.databinding.FragmentConsulterBinding
 import m1.pmob.veget_eau.databinding.FragmentPlanningBinding
+import m1.pmob.veget_eau.databinding.PlanningItemBinding
 
 class PlanningFragment : Fragment(R.layout.fragment_planning) {
 
     companion object {
         @JvmStatic
-        fun newInstance()=PlanningFragment()
+        fun newInstance() = PlanningFragment()
     }
     private lateinit var  binding : FragmentPlanningBinding
     lateinit var model : PlanningViewModel
@@ -34,12 +35,8 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
         recyclerView.hasFixedSize()
         recyclerView.layoutManager = LinearLayoutManager(activity)
             //adapter = MyRecAdapter()
+        adapter = PlanningRecyclerviewAdapter(model.plantsToWater)
 
-        val colors = resources.getStringArray(R.array.colors).toMutableList()
-        Log.d("CheckBoxList", "nombre =  ${colors.size}")
-        adapter = PlanningRecyclerviewAdapter(colors)
-
-        recyclerView.adapter = adapter
         recyclerView.adapter = adapter
         //observer
        // model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(model.plantsToWater.value)}
