@@ -6,17 +6,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.net.Uri
-import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class MyViewModel(application: Application) : AndroidViewModel(application) {
     val applicat = application
@@ -62,10 +58,10 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     fun loadPlanteByID(idsrch: Long): MutableLiveData<Eplante> {
         val plantholder: MutableLiveData<Eplante> = MutableLiveData<Eplante>()
         Thread {
-
             plantholder.postValue(dao.loadPlanteByID(idsrch))
-
         }.start()
+
+
         return plantholder
     }
 
@@ -91,7 +87,6 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         Thread {
             ArrosageToCheck.postValue(dao.getArrosageToCheckWater())
         }.start()
-
     }
 
     fun modifPlanteandArros(changep: Eplante, vararg lstarros: Earrosage) {
@@ -114,7 +109,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
                     toread.close()
                     towrite.close()
                     // on applique le changement d'URI
-                    plantToWrite = Eplante(changep.id, changep.nomscient, changep.nomverna, newpth)
+                    plantToWrite = Eplante(changep.id, changep.nomverna,changep.nomscient, newpth)
                     //chemin vers le nouveau fichier contenant l'image
                 } catch (fne: FileNotFoundException) { // si le fichier n'existe pas, on ajoute l'image standard de plante
                     plantToWrite = Eplante(

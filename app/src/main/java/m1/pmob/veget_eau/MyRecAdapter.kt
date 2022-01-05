@@ -1,19 +1,13 @@
 package m1.pmob.veget_eau
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
-import android.provider.Contacts
-import android.util.Log
+
 import android.view.LayoutInflater
-import android.view.View
+
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat.startActivity
+
 import androidx.recyclerview.widget.RecyclerView
 import m1.pmob.veget_eau.databinding.ItemLayoutBinding
 

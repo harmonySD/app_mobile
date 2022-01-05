@@ -132,7 +132,6 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
 
         // ecouteur bouton supppression de plante
         binding.bSupp.setOnClickListener {
-            //TODO  CONFIRMATION DE SUPPRESSION PUIS SUPPRESSION EFFECTIVE ET SORTIE DU FRAGMENT
             context?.let { it1 ->
                 AlertDialog.Builder(it1)
                     .setMessage("supprimer vraiment cette plante?") .setCancelable(false)
@@ -191,7 +190,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         }
 
         binding.edNomverna.setText(if (PlanteRepres.nomverna == "non communiqu") "" else PlanteRepres.nomverna)
-        binding.edNomscient.setText(if (PlanteRepres.nomverna == "non communiqu") "" else PlanteRepres.nomscient)
+        binding.edNomscient.setText(if (PlanteRepres.nomscient == "non communiqu") "" else PlanteRepres.nomscient)
 
         uri_path = PlanteRepres.uri?.toUri()
         //TODO il faut charger les arrosages ici

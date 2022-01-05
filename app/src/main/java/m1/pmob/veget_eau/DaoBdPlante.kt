@@ -60,6 +60,9 @@ interface DaoBdPlante {
     @Query("UPDATE PLANTE SET uri =:uri WHERE id = :id ")
     fun updateArrosInterval(id: Long,uri:String){}
 
+    @Query("SELECT * FROM PLANTE WHERE hasBeenWatered = 0")
+    fun getPlantsToWater(): List<Eplante>
+
     // REQUÊTES POUR METTRE A JOUR UNE PARTIE D'UN ARROSAGE
     //INUTILES ????
 /*
