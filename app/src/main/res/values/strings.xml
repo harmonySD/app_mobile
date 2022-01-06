@@ -2,4 +2,86 @@
     <string name="app_name">veget-eau</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="Months">
+        <item>Janvier</item>
+        <item>Février</item>
+        <item>Mars</item>
+        <item>Avril</item>
+        <item>Mai</item>
+        <item>Juin</item>
+        <item>Juillet</item>
+        <item>Août</item>
+        <item>Septembre</item>
+        <item>Octobre</item>
+        <item>Novembre</item>
+        <item>Décembre</item>
+    </string-array>
+    <string name ="WorkRequestID">DailyWork</string>
+    <string name="notification_channel_id">VEGETEAU_01</string>
+    <string name="notification_channel_name">VEGETEAU_CHANNEL</string>
+    <string name="notification_channel_description"> Canal de notification pour l\'application Vegeteau</string>
+    <string-array name="Daysinmonth">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+    <string-array name="colors">
+        <item>orange</item>
+        <item>blue</item>
+        <item>red</item>
+        <item>green</item>
+        <item>black</item>
+        <item>white</item>
+        <item>grey</item>
+        <item>yellow</item>
+        <item>violet</item>
+        <item>pink</item>
+        <item>brun</item>
+        <item>lazure</item>
+        <item>amaranth</item>
+        <item>amber</item>
+        <item>apricot</item>
+        <item>amethyst</item>
+        <item>beige</item>
+        <item>brown</item>
+        <item>carmine</item>
+        <item>cerise</item>
+        <item>chocolate</item>
+        <item>crimson</item>
+        <item>cyan</item>
+        <item>emerald</item>
+        <item>gold</item>
+        <item>indigo</item>
+        <item>silver</item>
+        <item>scarlet</item>
+    </string-array>
 </resources>
+

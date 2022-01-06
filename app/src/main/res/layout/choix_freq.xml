@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/fragment_ajouter"
+    >
+    <CheckBox
+        android:id="@+id/chckactiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="337dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="début de la période:" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jour:" />
+
+            <Spinner
+                android:id="@+id/jourdeb"
+                android:entries="@array/Daysinmonth"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mois:" />
+
+            <Spinner
+                android:id="@+id/moisdeb"
+                android:entries="@array/Months"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="fin de la période:" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jour:"
+                android:background="#ffffff"
+                />
+
+            <Spinner
+                android:id="@+id/jourfin"
+                android:entries="@array/Daysinmonth"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mois:" />
+
+            <Spinner
+                android:id="@+id/moisfin"
+                android:entries="@array/Months"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:background="#ffffff"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Fréquence d'arrosage en jours"/>
+
+        <EditText
+            android:id="@+id/edtextfreqj"
+            android:layout_width="70dp"
+            android:layout_height="45dp"
+            android:inputType="number"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Type d\'arrosage" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Normal" />
+
+            <RadioButton
+                android:id="@+id/radbnormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nutritif" />
+
+            <RadioButton
+                android:id="@+id/radbnutri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</LinearLayout>

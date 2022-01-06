@@ -1,13 +1,11 @@
 package m1.pmob.veget_eau
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+
+import androidx.room.*
 
 @Database(
-        entities=[Eplante::class,Earrosage::class],version = 1,
+        entities=[Eplante::class,Earrosage::class],version = 7
 )
 @TypeConverters(DateConverter::class)
 abstract class PlantsDatabase:RoomDatabase() {
