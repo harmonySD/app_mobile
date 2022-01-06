@@ -68,9 +68,9 @@ class PlanningRecyclerviewAdapter(
         binding.chkbox.setOnClickListener() {
             it as CheckBox
             if (it.isChecked) {
-                checked.remove(holder.data.id)
-            } else {
                 checked.add(holder.data.id)
+            } else {
+                checked.remove(holder.data.id)
             }
         }
 
