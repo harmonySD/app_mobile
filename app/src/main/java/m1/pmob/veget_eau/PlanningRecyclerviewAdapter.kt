@@ -12,21 +12,26 @@ import m1.pmob.veget_eau.databinding.PlanningItemBinding
 class PlanningRecyclerviewAdapter(
     val plannvm: PlanningViewModel, // on aura besoin du viewmodel pour envoyer des requêtes à la bd
     val tst: PlanningFragment, // on en a besoin pour observer le livedata
-    val colors: MutableLiveData<List<Eplante>> // un mauvais nom pour le mutable live data
 ) : RecyclerView.Adapter<PlanningRecyclerviewAdapter.VH>() {
     val checked = ArrayList<Long>() // on stocke tous les id des plante
-
+    private var colors: List<Eplante> = listOf()// un mauvais nom pour le mutable live data
+    fun setPlantes(plante: List<Eplante>?) {
+        if (plante != null) {
+            colors = plante
+            notifyDataSetChanged()
+        } else {
+        }
+    }
     init {
         // on veut que lorsque le liveData change le viewmodel change
         // SUREMENT LA SOURCE DU PROBLEME
         // n'est pas remis à jour ...
-        colors.observe(tst.viewLifecycleOwner) {
+       /* colors.observe(tst.viewLifecycleOwner) {
             Log.i("PLANNFRAG", " changement de bd !")
             this.notifyDataSetChanged()
             Log.i("PLANNFRAG", " notify fait")
             Log.i("PLANNFRAG", "comptage des elements :" + this.itemCount)
-        }
-
+        }*/
     }
 
     class VH(bind: PlanningItemBinding) : RecyclerView.ViewHolder(bind.root) {
@@ -72,14 +77,16 @@ class PlanningRecyclerviewAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         // on fournit juste la plante au VH et il se débrouille
-        holder.bindPlante(colors.value!![position])
+        holder.bindPlante(//colors.value!![position])
+        colors[position] )
 
     }
 
 
     override fun getItemCount(): Int =
         try {
-            colors.value!!.size
+            colors.size
+            //colors.value!!.size
         } catch (e: Exception) {
             //Log.i("PLANNFRAG", "comptage des elements :" + this.itemCount) // provoque des bugs si decommenté ??
             0

@@ -34,8 +34,9 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
             val recyclerView = binding.recyclerView // on va faire plusieures opérations sur le recyclerview
             recyclerView.hasFixedSize()
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            adapter = PlanningRecyclerviewAdapter(model, this, model.plantsToWater)
-
+            adapter = PlanningRecyclerviewAdapter(model, this)
+       // model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(it)}
+        model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(model.plantsToWater.value)}
             recyclerView.adapter = adapter
 
          //ECOUTEURS POUR LES BOUTONS DES PLANTES
