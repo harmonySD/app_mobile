@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import java.io.File
@@ -194,7 +195,9 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             PlanningWorker.schedule_work(applicat.applicationContext)
             // on doit créer un channel de notification pour envoyer des notifications
             // si on en possède déjà un ce n'est pas un problème (cf. docu notifications)
+            Log.d("NOTIFVEGET","avant le channel ")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.d("NOTIFVEGET","si le channel ")
                 val id = applicat.applicationContext.getString(R.string.notification_channel_id)
                 val name = applicat.applicationContext.getString(R.string.notification_channel_name)
                 val descriptionText =
@@ -207,7 +210,11 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
                 val notificationManager: NotificationManager =
                     applicat.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.createNotificationChannel(channel)
+            }else{
+                Log.d("NOTIFVEGET","sinon le channel ")
+
             }
+            Log.d("NOTIFVEGET","apres le channel ")
         }.start()
     }
 }
