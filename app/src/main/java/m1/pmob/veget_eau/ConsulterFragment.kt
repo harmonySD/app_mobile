@@ -16,10 +16,12 @@ class ConsulterFragment : Fragment(R.layout.fragment_consulter) {
         @JvmStatic
         fun newInstance()=ConsulterFragment()
     }
+
     private lateinit var  binding : FragmentConsulterBinding
     lateinit var model : MyViewModel
     lateinit var adapter: MyRecAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentConsulterBinding.bind(view)
         model = ViewModelProvider(this).get(MyViewModel::class.java)

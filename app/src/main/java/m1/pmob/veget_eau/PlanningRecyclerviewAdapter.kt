@@ -1,76 +1,89 @@
 package m1.pmob.veget_eau
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
+
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.CheckedTextView
-import android.widget.TextView
-import androidx.core.view.get
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import m1.pmob.veget_eau.databinding.PlanningItemBinding
 
 
-class PlanningRecyclerviewAdapter(val colors: MutableLiveData<MutableList<Eplante>>): RecyclerView.Adapter<PlanningRecyclerviewAdapter.VH>() {
-        val checked = ArrayList<Int>()
+class PlanningRecyclerviewAdapter(
+    val plannvm: PlanningViewModel, // on aura besoin du viewmodel pour envoyer des requêtes à la bd
+    val tst: PlanningFragment, // on en a besoin pour observer le livedata
+    val colors: MutableLiveData<List<Eplante>> // un mauvais nom pour le mutable live data
+) : RecyclerView.Adapter<PlanningRecyclerviewAdapter.VH>() {
+    val checked = ArrayList<Long>() // on stocke tous les id des plante
 
-    class VH(b: PlanningItemBinding) : RecyclerView.ViewHolder(b.root){
+    init {
+        // on veut que lorsque le liveData change le viewmodel change
+        // SUREMENT LA SOURCE DU PROBLEME
+        // n'est pas remis à jour ...
+        colors.observe(tst.viewLifecycleOwner) {
+            Log.i("PLANNFRAG", " changement de bd !")
+            this.notifyDataSetChanged()
+            Log.i("PLANNFRAG", " notify fait")
+            Log.i("PLANNFRAG", "comptage des elements :" + this.itemCount)
+        }
+
     }
 
-    fun removeChecked() {
+    class VH(bind: PlanningItemBinding) : RecyclerView.ViewHolder(bind.root) {
+        val vhBinding: PlanningItemBinding = bind // pour éviter d'avoir à inflate à chaque modif
+        lateinit var data: Eplante // on stocke directement dans le VH la plante à afficher
+
+        fun bindPlante(plnt: Eplante) { // appelé à chaque onBindViewHolder
+            data = plnt
+            vhBinding.idplante.text = data.id.toString()
+            vhBinding.nomplann.text = data.nomverna
+            vhBinding.nomplannscient.text = data.nomscient
+        }
+    }
+
+    fun removeChecked() { // pour dire qu'une plante a été arrosée.
+        for (e in checked) {
+            plannvm.setWatered(e)
+        }
         checked.clear()
         notifyDataSetChanged()
     }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanningRecyclerviewAdapter.VH {
-            //créer View d'un élément de la liste à partir de fichier layout xml
-            //val binding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            val binding = PlanningItemBinding.inflate(LayoutInflater.from(parent.context),parent, false)
-            val holder = PlanningRecyclerviewAdapter.VH(binding)
-            binding.root.setOnClickListener(){
-                val binded = PlanningItemBinding.bind(it)
-                if(binded.chkbox.isChecked){
-                    checked.remove( binded.idplante.text.toString().toInt())
-                    binded.chkbox.isChecked = false
-                }else{
-                    checked.add( binded.idplante.text.toString().toInt())
-                    binded.chkbox.isChecked = true
-                }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PlanningRecyclerviewAdapter.VH {
+        //val binding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            PlanningItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val holder = PlanningRecyclerviewAdapter.VH(binding)
+
+        binding.chkbox.setOnClickListener() {
+            val binded = PlanningItemBinding.bind(it)
+            if (binded.chkbox.isChecked) {
+                checked.remove(holder.data.id)
+            } else {
+                checked.add(holder.data.id)
             }
-
-            /*
-                val v = LayoutInflater
-                .from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_checked, parent, false)
-
-            /*installer le listener sur chaque View */
-            v.setOnClickListener(listener)
-            */
-            //créer et retourner le ViewHolder
-
-
-
-
-            return holder
         }
 
-        override fun onBindViewHolder(holder: VH, position: Int) {
-            /* recuperer la View :
-     * holder.itemView c'est la View associée à ce holder */
-            val binding = holder.itemView as PlanningItemBinding
+        return holder
+    }
 
-            /* mettre la valeur colors[position] dans la View */
-            binding.idplante.text = colors[position].id.toString()
-
-
-        }
-
-
-        override fun getItemCount(): Int = colors.size
-
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        // on fournit juste la plante au VH et il se débrouille
+        holder.bindPlante(colors.value!![position])
 
     }
+
+
+    override fun getItemCount(): Int =
+        try {
+            colors.value!!.size
+        } catch (e: Exception) {
+            //Log.i("PLANNFRAG", "comptage des elements :" + this.itemCount) // provoque des bugs si decommenté ??
+            0
+        }
+
+
+}

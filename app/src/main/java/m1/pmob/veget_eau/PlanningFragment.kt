@@ -21,36 +21,32 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
         fun newInstance() = PlanningFragment()
     }
     private lateinit var  binding : FragmentPlanningBinding
-    lateinit var model : PlanningViewModel
-    lateinit var adapter: PlanningRecyclerviewAdapter
+    lateinit var model : PlanningViewModel // le viewmodel pour les accès à la BD
+    lateinit var adapter: PlanningRecyclerviewAdapter //l'adapteur du recyclerview
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentPlanningBinding.bind(view)
-        model = ViewModelProvider(this).get(PlanningViewModel::class.java)
+            binding = FragmentPlanningBinding.bind(view)
+            model = ViewModelProvider(this).get(PlanningViewModel::class.java)
 
-        val recyclerView = binding.recyclerView
-        recyclerView.hasFixedSize()
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-            //adapter = MyRecAdapter()
-        adapter = PlanningRecyclerviewAdapter(model.plantsToWater)
+            val recyclerView = binding.recyclerView // on va faire plusieures opérations sur le recyclerview
+            recyclerView.hasFixedSize()
+            recyclerView.layoutManager = LinearLayoutManager(activity)
+            adapter = PlanningRecyclerviewAdapter(model, this, model.plantsToWater)
 
-        recyclerView.adapter = adapter
-        //observer
-       // model.plantsToWater.observe(viewLifecycleOwner){adapter.setPlantes(model.plantsToWater.value)}
+            recyclerView.adapter = adapter
 
+         //ECOUTEURS POUR LES BOUTONS DES PLANTES
+       binding.SnoozeButton.setOnClickListener(){
 
-        // ECOUTEURS POUR LES BOUTONS DES PLANTES
-       // binding.SnoozeButton.setOnClickListener(){
+        }
 
-        //}
+        binding.waterButton.setOnClickListener(){
 
-//        binding.waterButton.setOnClickListener(){
+        }
 
-
-      //  }
     /* pas de champs de recherche de texte pour le moment
         binding.plantes.addTextChangedListener(object : TextWatcher {
             //val TAG: String = "pays watcher"
