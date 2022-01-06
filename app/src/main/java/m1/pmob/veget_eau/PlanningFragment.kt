@@ -41,11 +41,11 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
 
          //ECOUTEURS POUR LES BOUTONS DES PLANTES
        binding.SnoozeButton.setOnClickListener(){
-
+           adapter.removeChecked()
         }
 
         binding.waterButton.setOnClickListener(){
-
+            adapter.removeChecked()
         }
 
     /* pas de champs de recherche de texte pour le moment

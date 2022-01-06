@@ -193,7 +193,7 @@ class ModifierFragment : Fragment(R.layout.fragment_modifier) {
         binding.edNomscient.setText(if (PlanteRepres.nomscient == "non communiqu") "" else PlanteRepres.nomscient)
 
         uri_path = PlanteRepres.uri?.toUri()
-        //TODO il faut charger les arrosages ici
+
         if (arrosPlanteRepres.size > 0) {
             setArrosElem(binding.arros1, arrosPlanteRepres[0])
         } else setArrosElem(binding.arros1, null)
