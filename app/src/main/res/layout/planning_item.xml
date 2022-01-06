@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/uselessid1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/idplante"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="123456" />
+            android:layout_weight="1"
+            android:textSize="15sp"/>
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
@@ -28,35 +29,25 @@
 
             <TextView
                 android:id="@+id/nomplann"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="50dp"
-                android:text="verna" />
+                android:layout_weight="1"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/nomplannscient"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="50dp"
-                android:text="latin" />
+                android:layout_weight="1"
+                android:textSize="15sp"/>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Type d'arrosage :" />
-
-        <TextView
-            android:id="@+id/typeplannarros"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="typearros" />
     </LinearLayout>
 
     <CheckBox
         android:id="@+id/chkbox"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         />
 </LinearLayout>

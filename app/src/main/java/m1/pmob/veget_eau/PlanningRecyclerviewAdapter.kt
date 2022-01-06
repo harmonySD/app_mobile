@@ -4,6 +4,7 @@ package m1.pmob.veget_eau
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import m1.pmob.veget_eau.databinding.PlanningItemBinding
@@ -63,9 +64,10 @@ class PlanningRecyclerviewAdapter(
             PlanningItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val holder = PlanningRecyclerviewAdapter.VH(binding)
 
+
         binding.chkbox.setOnClickListener() {
-            val binded = PlanningItemBinding.bind(it)
-            if (binded.chkbox.isChecked) {
+            it as CheckBox
+            if (it.isChecked) {
                 checked.remove(holder.data.id)
             } else {
                 checked.add(holder.data.id)
