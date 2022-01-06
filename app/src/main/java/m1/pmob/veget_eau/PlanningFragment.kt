@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import m1.pmob.veget_eau.databinding.FragmentConsulterBinding
@@ -23,6 +24,7 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
     private lateinit var  binding : FragmentPlanningBinding
     lateinit var model : PlanningViewModel // le viewmodel pour les accès à la BD
     lateinit var adapter: PlanningRecyclerviewAdapter //l'adapteur du recyclerview
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -45,7 +47,7 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
         }
 
         binding.waterButton.setOnClickListener(){
-            adapter.removeChecked()
+          adapter.removeChecked()
         }
 
     /* pas de champs de recherche de texte pour le moment
@@ -67,6 +69,11 @@ class PlanningFragment : Fragment(R.layout.fragment_planning) {
         })
         */
 
+    }
+    fun arros( v: View){
+        for(i in adapter.checked){
+            model.setWatered(i)
+        }
     }
 
 

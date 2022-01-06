@@ -51,7 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
-            android:text="ARROSE" />
+            android:text="ARROSE"
+            android:onClick="arros"/>
 
     </LinearLayout>
 </LinearLayout>
