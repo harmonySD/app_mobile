@@ -1,6 +1,7 @@
 package m1.pmob.veget_eau
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import kotlin.concurrent.thread
@@ -27,6 +28,7 @@ class PlanningViewModel(application: Application) : AndroidViewModel(application
             dao.setWater(id, true)
             // on met à jour la liste des plantes qu'il reste à arroser
             plantsToWater.postValue(dao.getPlantsToWater())
+            Log.d("ici","oui")
         }.start()
     }
 

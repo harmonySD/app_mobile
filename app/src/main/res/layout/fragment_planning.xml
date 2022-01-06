@@ -19,10 +19,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"/>
 
-
-    </androidx.recyclerview.widget.RecyclerView>
     <!-- vraiment nécessaire le Edit text ?
     <EditText
         android:id="@+id/plantes"
@@ -53,7 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
-            android:text="ARROSE" />
+            android:text="ARROSE"
+            android:onClick="arros"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -13,10 +13,6 @@ import m1.pmob.veget_eau.databinding.FragmentFicheBinding
 
 class FicheFragment : Fragment(R.layout.fragment_fiche) {
     // Ce Fragment sert à représenter la fiche complète d'une plante à arroser
-    // idée rajouter ici
-    // - la date du prochain arrosage
-    // - le prochain arrosage tel que défini par l'utilisateur (s'il a fait "Me rappeler plus tard")
-    // un bouton pour set 1 date particulière qui ne respecte pas le calendrier ?
     companion object {
         @JvmStatic
         fun newInstance()=FicheFragment()
